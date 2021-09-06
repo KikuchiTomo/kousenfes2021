@@ -320,12 +320,19 @@ form input, form button, form p, form div{
 
 form select{ cursor: pointer; }
 div.drop-down{
-    padding: 0;
-    margin: auto;
+    padding: 0;    
     display: block;
     position: absolute;
-    width: 80%;
+   width: 100%;
 }
+
+div.drop-down-con{
+    padding: 0;
+    margin: auto;
+    width: 80%;
+    height: 47px;
+}
+
 div.drop-down select{ 
     position: absolute;
     font-size: 12px;
@@ -342,8 +349,8 @@ div.drop-down select{
 
 div.drop-down select+label{
     position: absolute;
-    right: 5px;
-    top: 26px;
+    right: 17px;
+    top: 14px;   
 }
 .error-show{
     font-family: 'Noto Sans JP', sans-serif;
