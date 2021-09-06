@@ -1,0 +1,229 @@
+
+
+/* menu (ham)  */
+#menu-ham{
+    display: none;
+}
+
+.menu-background{
+    height: 70px;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    transition: 0.3s;
+    z-index: 97;
+}
+
+.menu-background.scroll-changed{
+    background: white;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
+}
+
+.menu-background h1{
+    margin-left: 20px;
+    line-height: 70px;
+    z-index: 98;
+    transition: 0.3s;
+    color: white;
+}
+
+.menu-background.scroll-changed h1{
+    transition: 0.3s;
+    color: #5CAFC9;    
+}
+
+.menu-button {
+    position: fixed;
+    height: 60px;
+    width: 60px;    
+    top: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.menu-button span, .menu-button span::before, .menu-button span::after{
+    position: absolute;
+    content: '';
+    display: block;
+    height: 3px;
+    width: 25px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 1px;
+}
+
+.menu-button span::before {
+    bottom: 8px;
+}
+
+.menu-button span::after{
+    top: 8px;
+}
+
+#hams.scroll-changed,#hams.scroll-changed::after,#hams.scroll-changed::before{
+    background: #5CAFC9;
+}
+
+#menu-ham:checked + label.menu-button span{
+    background-color: transparent;
+}
+
+#menu-ham:checked + label.menu-button span::after{
+    transition: 0.6s;
+    top: 0;
+    background: #98D3DB;
+    transform: rotate(405deg);
+    opacity: 1;
+}
+
+#menu-ham:checked + label.menu-button span::before{
+    transition: 0.6s;
+    bottom: 0;
+    background: #98D3DB;
+    transform: rotate(-405deg);
+    opacity: 1;
+}
+
+/* menu - style */
+@keyframes open-menu{
+    0%{
+        opacity: 0;
+        z-index: 0;    
+    }100%{
+        opacity: 1;
+        z-index: 96;
+        background: white;
+    }
+}
+
+#menu-ham:checked + label.menu-button + nav.menu-container{
+    display: block !important;
+    animation: open-menu 0.4s ease-in-out .1s forwards;
+}
+
+#menu-ham:checked + label.menu-button + nav.menu-container + .menu-background{
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0);
+    border-bottom: 1px solid #5CAFC9;
+}
+
+#menu-ham:checked + label.menu-button + nav.menu-container + .menu-background  h1{
+    color: #5CAFC9;
+}
+/* menu (close) */
+nav.menu-container{
+    padding: 120px 30px;
+    display: none;
+    z-index: 0;
+    position: fixed;
+    top: 0;
+    opacity: 0;
+    background: white;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+.menu-container a{
+    transition: 0.2s;    
+    display: block;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: #2e2e2e;
+    font-size: 1.0em;
+    font-weight: bold;
+}
+
+.menu-container a:hover{
+    transition: 0.5s;
+    color: #437DBA;
+}
+
+/* end menu style*/
+
+.mark::before{
+    content: '-' ;
+    margin-right: 3px;
+}
+
+.research-top{
+    height: 100vh;
+}
+
+section.research-creative{
+    padding: 7vw 0;
+    background: white;
+}
+
+div.creative-title{
+    z-index: 1;
+    background: white;
+    margin: 0 5vw;
+}
+
+div.creative-content{
+    background: white;
+    z-index: 0;
+    margin: 0 5vw;
+}
+
+/* copyright */
+footer{
+    padding: 8vh;
+}
+
+.copyright{
+    text-align: center;
+    font-size: 0.5em;
+    color: #5CAFC9;
+}
+
+/* background */
+div.top-background{
+    z-index: 1;
+    background: #98D3DB;
+    height: 100vh;
+    width: 100vw;
+}
+
+div.top-content{
+    z-index: 95;
+    position: relative;
+    top : 120px;
+    left: 8vw;
+    max-width: 80%;
+}
+
+div.top-title{
+    display: block;
+    margin: 0;
+    width: 50%;
+    position: relative;
+    top: 100px;
+    left: 5vw;
+}
+
+div.top-title h2{
+}
+
+
+section.research-sotu{
+    padding: 7vw 0;
+    background: #98D3DB;;
+}
+
+div.sotu-title{
+    z-index: 1;
+    background: #98D3DB;
+    margin: 0 5vw;
+}
+
+div.sotu-content{
+    background: #98D3DB;
+    z-index: 0;
+    margin: 0 5vw;
+}

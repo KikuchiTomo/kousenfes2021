@@ -1,0 +1,7 @@
+/key_ssl/
+/key_nopass/
+/log/
+\#*#
+/.bundle/
+/pids/
+/.DS_Store
