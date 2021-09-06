@@ -45,10 +45,41 @@ User.getInfo(user_id)
 
 ### バイナリファイル 
 Git LFSを使用する。導入方法はサイトを参照すること。[リンク](https://git-lfs.github.com/)
+#### Install
+Macでは`brew install git-lfs`
+#### Usage
+- .gitがあるディレクトリで`git lfs install`を実行
+- `git lfs track "*.jpg"`で`*.jpg`のようにして，LFSに指定したいファイル形式を指定する
+- `git add`する
+- `git commit`&`git push`
 
 ### ディレクトリ
 必須なディレクトリでも空の場合はcommitせずに、`Makefile`を使用し`make prepare`で生成すること。
 
+### ブランチ
+ - ブランチの確認: `git branch --contains=HEAD`
+ - ブランチをきる: `git checkout -b feature/{branchname}`
+ - 作業を行う
+ - 監視対象へ加える: `git add {filename}`
+   - 間違えて`add`した時: `git reset`または特定のファイルならば`git reset {filename}`
+ - コミットする: `git commit -m "変更内容/作業内容"`
+ - 状態を確認: `git status`
+ - リモートの変更を取り込む
+   - `git fetch`
+   - `git rebase origin/main`
+   - 競合が起きたら
+     - 競合したところを編集し`git add`&`git rebase --continue`
+ - ブランチをpush: `git push origin feature/{branchname}`
+ - サイトでプルリクする
+ - マスターに戻すとき
+   - `git fetch`: 最新のmainを取得
+   - `git rebase origin/main`: 今のブランチにマスターの変更を取り込む
+   - 競合が起きたら
+     - 競合したところを編集し`git add`&`git rebase --continue`
+   - 競合が解消したら: `git push origin feature/xxx`
+   - `git checkout main`: mainブランチに戻る
+   - `git pull`: リモートをローカルに反映
+   
 ## 使用方法
 ### サーバの起動
 `make start`
