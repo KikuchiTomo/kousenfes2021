@@ -55,22 +55,22 @@
     <section class="index-info">
       <div id="user-container" class="user">
         <h1>新規ユーザ登録</h1>
-        <form method="post" accept-charset="utf-8">
+        <form method="post" accept-charset="UTF-8" action="/user/sinup/entry">
             <p class="form-required">姓名</p>
             <div class="input-flex">
-              <input name="last_name" type="text" maxlength="20" placeholder="姓" class="form input border-right-none">
-              <input name="first_name" type="text" maxlength="20" placeholder="名" class="form input">
+              <input name="last_name" type="text" maxlength="20" placeholder="姓" class="form input border-right-none" required>
+              <input name="first_name" type="text" maxlength="20" placeholder="名" class="form input" required>
             </div> 
             <p class="form-required">ふりがな ( 姓名 ) </p>
             <div class="input-flex">
-              <input name="last_name_h" type="text" maxlength="20" placeholder="ふりがな(姓)" class="form input border-right-none">
-              <input type="first_name_h" maxlength="20" placeholder="ふりがな(名)" class="form input ">
+              <input name="last_name_h" type="text" maxlength="20" placeholder="ふりがな(姓)" class="form input border-right-none" pattern="[\u3041-\u3096]*" required>
+              <input type="first_name_h" maxlength="20" placeholder="ふりがな(名)" class="form input " pattern="[\u3041-\u3096]*" required>
             </div>
             <p class="form-required">種別</p>
             
             <div class="drop-down-con">
             <div class="drop-down">
-              <select name="status" class="form input" id="select-status">
+              <select name="status" class="form input" id="select-status" required>
                 <option value="0000">種別を選択して下さい</option>
               </select>
               <label for="select-status">▼</label>
@@ -78,12 +78,12 @@
             </div>  
 
             <p class="form-required">学校名</p>
-            <input class="form input" type="text" name="school-name" placeholder="〇〇立〇〇高等専門学校">
+            <input class="form input" type="text" name="school-name" placeholder="〇〇立〇〇高等専門学校" required>
 
             <p class="form-required">学年</p>
             <div class="drop-down-con">
               <div class="drop-down">
-                <select name="status" class="form input" id="select-status">
+                <select name="status" class="form input" id="select-status" required>
                   <option value="0000">学年を選択して下さい</option>
                 </select>
                 <label for="select-status">▼</label>
@@ -93,14 +93,14 @@
             <p class="form-required">組・コース名</p>
              <div class="drop-down-con">
                 <div class="drop-down">
-                  <select name="status" class="form input" id="select-status">
+                  <select name="status" class="form input" id="select-status" required>
                     <option value="0000">コース・組を選択して下さい</option>
                   </select>
                   <label for="select-status">▼</label>
                 </div>
               </div>  
             <p class="form-required">メールアドレス</p>
-            <input type="email" name="email" class="email" placeholder="Email Address" maxlength="60" minlength="3" pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$" required>
+            <input type="email" name="email" class="email" placeholder="example@g.metro-cit.ac.jp" maxlength="60" minlength="3" pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$" required>
             <button type="submit" class="login">認証へ進む ＞</button>
         </form>       
       </div>
