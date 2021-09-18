@@ -14,8 +14,5 @@ hup:
 cleanlog:
         rm -i ../log/unicorn.std???.log
 
-cleanhup: stop clearlog start
-        -echo '=== cleanhup done==='
-
 cleanbak:
         rm -rf *~
