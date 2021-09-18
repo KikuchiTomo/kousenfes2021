@@ -1,5 +1,4 @@
 # 高専祭Webアプリリポジトリ
-[![GitHub issues](https://img.shields.io/github/issues/KikuchiTomo/kousenfes2021)](https://github.com/KikuchiTomo/kousenfes2021/issues)
 
 ## 概要
 2021年度の産技高専の高専祭Webアプリリポジトリ．
