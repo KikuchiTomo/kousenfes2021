@@ -34,14 +34,14 @@ class UserControllClass < DBControllClass
   
   # パスコードの生成を行う
   # @return passcode [String] パスコード
-  def geneTmpPassCode()
+  def generateTmpPasscode()
     passcode = SecureRandom.hex(8)
     return passcode
   end
 
   # パスコードの登録を行う
   # @param passcode [String]　パスコード
-  def regTmpPassCode(uuid, passcode)
+  def registerTmpPasscode(uuid, passcode)
     # 存在チェック
     return false if checkUserExist(uuid)!=1
     # ソルトはXQQ2021
@@ -54,7 +54,7 @@ class UserControllClass < DBControllClass
     return true
   end
 
-  def regUserInfo(config)
+  def registerUserInformation(config)
     return false if checkUserExist(config[:uuid]) !=0
     return false if checkUserEmail(config[:email])!=0
     sql = 'insert into kouhou_db.users (uuid, email, pass_hash, tmp_pass_hash, tmp_pash_expire, permission, last_name, first_name, ip_last, grade_id, school_id, course_id, state) values (?,?,?,?,?,?,?,?,?,?,?,?,?);'
@@ -74,5 +74,62 @@ class UserControllClass < DBControllClass
             config[:course_id],
             config[:state])
     return true;
+  end
+
+  GET '/user/sinup' do
+
+  end
+
+  GET '/user/sinup/email_check' do
+    param_access_key = params[:access_key] ||= ''
+    param_uuid       = params[:uuid]       ||= ''
+
+    # 必須パラメータがない時は，共通エラー画面へ遷移
+    if isNilParams(param_uuid, param_access_key)
+      raise CommonErrorView, '不正なパラメータ-必須パラメータが取得できませんでした'
+      return
+    end
+
+    # uuidからアクセスキーを調べる
+    sql = 'select access_key from kouhou_db.tempolary_user_passcode where uuid=? and enable_flag=1 and delete_flag=0;'
+    res = execSql(sql, param_uuid);
+    access_key = res.first[:access_key]
+
+    # 共通エラー画面に飛ばす
+    if(access_key != param_access_key)
+      raise CommonErrorView, "不正なアクセス-アクセスキー("+param_access_key+")は存在しませんでした."
+      return      
+    end
+
+    # enable_flagを2(アクセスキー認証済み)に変更
+    sql = 'update kouhou_db.tempolary_user_passcode set enable_flag=? where uuid=? and enable_flag=1 and delete_flag=0;'
+    execSql(sql, 2, param_uuid);
+
+    erb :sinup_email_check
+  end
+
+  POST '/user/sinup/email_check' do
+    param_uuid = params[:uuid] ||= ''
+    param_passcode = params[:passcode] ||=''
+
+    if isNilParams(param_uuid, param_passcode)
+      raise CommonErrorView, '不正なパラメータ-必須パラメータが取得できませんでした'
+      return 
+    end
+
+    sql = 'select passcode_hash from kouhou_db.tempolary_user_passcode where uuid=? and enable_flag=2 and delete_flag=0;'
+    res = execSql(sql, param_uuid);
+    passcode_hash = res.first[:passcode_hash]
+
+    param_passcode_hash = HashSHA.get512(param_passcode + param_uuid + 'XQQ2021')
+
+    if param_passcode_hash != passcode_hash
+      raise CommonErrorView, "不正なアクセス-このパスコードは有効ではありません"
+      return            
+    end
+
+    #TODO+ tempolary_user_passcodeのdelete_flagを1に
+    #TODO+ usersのenable_flagを2に
+    # 0 : 無効 , 1 : 未認証, 2 : 認証済み
   end
 end

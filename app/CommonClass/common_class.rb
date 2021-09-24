@@ -60,7 +60,14 @@ class CommonClass < Sinatra::Base
     @error_desc  = "サーバでエラーが発生しました"
     erb :error
   end
- 
+
+  def isNilParams(*args)
+    args.each do |param|
+      return true if param==nil || param=='' || param=='\n' || param=='\n\r'
+    end
+    return false
+  end
+  
   get '/check/sinatra/process' do
     return 'Everything is OK'
   end
