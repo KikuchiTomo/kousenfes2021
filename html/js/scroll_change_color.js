@@ -7,13 +7,13 @@
 class scrollChangeClass{
     constructor(config){
         console.log(config)
-        this.scroll_target_id = config.observe_target_id
+        this.is_web_kits = config.is_webkits_client;
         this.color_target_ids = config.color_target_ids
         this.trigger_target_id = config.trigger_target_id
         this.class_name = config.class_name
         console.log(this)
         
-        this.scroll_elem  = document.getElementById(this.scroll_target_id)
+        this.scroll_elem  = (this.is_web_kits)?document.body:document.documentElement;
         this.trigger_elem = document.getElementById(this.trigger_target_id)
         this.target_elems = []
         this.target_num   = this.color_target_ids.length
@@ -25,9 +25,9 @@ class scrollChangeClass{
 
     proc(){
         this.trigger_val = this.trigger_elem.clientHeight - 100        
-        this.scroll_elem = document.getElementById(this.scroll_target_id)        
+        this.scroll_elem  = (this.is_web_kits)?document.body:document.documentElement;        
+                
         this.scroll_val = this.scroll_elem.scrollTop + 100// get Scroll
-        
         if(this.scroll_val > this.trigger_val){
             this.addTargetClassName(this.class_name)
         }else{

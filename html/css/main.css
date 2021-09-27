@@ -231,7 +231,6 @@ div.top-background{
     z-index: 1;
     background: #0A62A9;
     height: 100vh;
-    width: 100vw;
 }
 
 div.top-content{
@@ -325,7 +324,9 @@ div.news-content::-webkit-scrollbar{
     transform: rotate(45deg) translateX(8px);
 }
 
-
+.news-col{
+    overflow-x: scroll;
+}
 .news-link:hover{
     transition: 0.3s;
     color: #0A62A9;
@@ -711,26 +712,23 @@ div.info-title{
 div.info-content{
     display: flex;
     padding: 30px 10px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     z-index: 0;
     margin: 0 5vw;
     max-height: 100vh;
     overflow-y: hidden;
-    overflow-x: scroll;
-     -ms-overflow-style: none;    
-     scrollbar-width: none;       
+    overflow-x: scroll;  
 }
 
-div.info-content::-webkit-scrollbar{ 
-    display:none;
+div.info-container{
+    display: flex;
+    width: 100%;    
 }
 
 .thum-simple-one{
     margin-right: 15px;
     width: 200px;
 }
-
-
 
 .thum-simple-one-img{
     transition: 0.3s;    

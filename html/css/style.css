@@ -7,14 +7,21 @@
 #E5E3D5    
 */
 
+html{
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    scroll-behavior: smooth;
+    overflow: overlay;
+}
 
-html, body{
-    scroll-behavior: smooth;    
+body{
     height: 100vh;
-    overflow: scroll;
     margin: 0;
     font-family: 'Noto Sans JP', sans-serif;
     color: #2e2e2e;    
+    scrollbar-width: thin;    
+    scrollbar-color: rgba(0,0,0,0.2) rgba(10,10,100,0.8); 
 }
 
 h1{
@@ -112,4 +119,26 @@ ul {
     transition: 0.5s;
     opacity: 0;
     visibility: hidden;
+}
+
+.scroll-bar-width::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+}
+ 
+.scroll-bar-height::-webkit-scrollbar{
+    height: 10px;
+    cursor: pointer;
+}
+
+.scroll-bar::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 5px;
+    cursor: pointer;
+}
+ 
+.scroll-bar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    cursor: pointer;
 }
