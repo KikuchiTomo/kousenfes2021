@@ -142,3 +142,11 @@ ul {
     border-radius: 5px;
     cursor: pointer;
 }
+
+code{
+    padding: 5px 6px;
+    background: lightgray;
+    border-radius: 3px;
+    border: 0.5px solid gray;
+    color: #2e2e2e;
+}
