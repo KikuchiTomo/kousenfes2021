@@ -3,9 +3,9 @@ require "rubygems"
 require "sinatra/base"
 require 'mysql2'
 
-require "./hash_class.rb"
-require "../CommonClass/common_class.rb"
-require "../DBControllClass/db_controll_class.rb"
+require "./functions/hash_class.rb"
+require "./CommonClass.rb"
+require "./DBControllClass.rb"
 
 #
 # Userの管理を行うクラス

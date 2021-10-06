@@ -12,15 +12,13 @@ class CommonClass < Sinatra::Base
       :secret => 'G9j5LtEbxK0SeNyc',
       :expire_after => 3600 * 24 * 30
 
-  # 設定保持用
-  register Sinatra::ConfigFile
-  set :show_exceptions, :after_handler
+  set :environment, :production
 
-  # Errorメッセージを表示する
+    # Errorメッセージを表示する
+  class CommonErrorView < StandardError; end
   error CommonErrorView do
     @error_title = env['sinatra.error'].message.split('-')[0]
     @error_desc  = env['sinatra.error'].message.split('-')[1]
-
     erb :error
   end
 
@@ -50,13 +48,13 @@ class CommonClass < Sinatra::Base
   end
 
   error 409..451 do
-    @error_title = "4xx Error"
+    @error_title = "4XX Error"
     @error_desc  = "エラーが発生しました"
     erb :error
   end
 
   error 500..510 do
-    @error_title = "5xx Error"
+    @error_title = "5XX Error"
     @error_desc  = "サーバでエラーが発生しました"
     erb :error
   end
@@ -70,5 +68,9 @@ class CommonClass < Sinatra::Base
   
   get '/check/sinatra/process' do
     return 'Everything is OK'
+  end
+
+  get '/check/sinatra/error' do
+    raise CommonErrorView, 'ErrorCheck-LocalExceptionIsOK!'
   end
 end
