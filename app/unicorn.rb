@@ -1,5 +1,5 @@
 dir=File.expand_path('../', __FILE__)
-worker_processes 1
+worker_processes 6
 working_directory "#{dir}"
 timeout 20
 

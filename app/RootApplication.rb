@@ -1,8 +1,9 @@
 # coding: utf-8
 require 'sinatra/base'
+require './CommonClass.rb'
 
-class KousenFestivalRootApplication  < Sinatra::Base
+class KousenFestivalRootApplication  < CommonClass
   get '/' do
-    "Hello this is Sinatra and Unicorn , Nginx!"
+    erb :index
   end
 end
