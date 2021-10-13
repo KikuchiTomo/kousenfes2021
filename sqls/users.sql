@@ -1,0 +1,20 @@
+create table kouhou.users (
+       id                 int  auto_increment not null,
+       uuid               char(36)            not null,
+       email              text                not null,
+       first_name         varchar(12)         not null,
+       last_name          varchar(12)         not null,
+       first_name_rb      varchar(24)         not null,
+       last_name_rb       varchar(24)         not null,
+       grade              int                 not null,
+       passhash           varchar(512)        not null,
+       token              text                not null,
+       token_expire       datetime            not null,
+       course             char(1),
+       school             int                 not null default 1,
+       status             int                 not null default -1,
+       del_flg            int                 not null default 0,
+       reg_time           timestamp           not null default current_timestamp,
+       upd_time           timestamp           not null default current_timestamp on update current_timestamp,
+       primary key(id)
+ );

@@ -12,7 +12,8 @@ class CommonClass < Sinatra::Base
       :secret => 'G9j5LtEbxK0SeNyc',
       :expire_after => 3600 * 24 * 30
 
-  set :environment, :production
+  # 本番環境ではコメントアウト
+  # set :environment, :production
 
     # Errorメッセージを表示する
   class CommonErrorView < StandardError; end

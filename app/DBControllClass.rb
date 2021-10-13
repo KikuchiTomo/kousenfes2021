@@ -34,7 +34,7 @@ class DBControllClass < CommonClass
 
   before do
     # MySQLの設定準備
-    @mysql = Mysql2::Client.new(:host => "localhost", :username => "kouhou-master", :password => 'kouhour2', :database => 'db0', :charset => 'utf8mb4', :encoding => 'utf8mb4', :collation => 'utf8mb4_bin')
+    @mysql = Mysql2::Client.new(:host => "localhost", :username => "kouhou", :password => 't!aEW0L|QicC', :database => 'kouhou', :charset => 'utf8mb4', :encoding => 'utf8mb4', :collation => 'utf8mb4_bin')
   end
 
   after do

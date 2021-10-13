@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja" id="html">
+  <head>
+    <!--　覗いた人への言い訳: 結合テストも単体テストしてないので，バックエンド側にバグあるかもしれないけど，一応セキュリティの対策はしてます -->
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Sinup - 第53回 高専祭</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/user.css">
+    <script src="/js/scroll_change_color.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script>
+      function closeMenu(){
+          let menu_elem = document.getElementById('menu-ham');
+          menu_elem.checked = false;
+      }
+    </script>
+  </head>
+  <body id="body" class="scroll-bar scroll-bar-width">
+    <div class="loading" id="loading">
+      <img src="favicon.ico">
+    </div>
+    
+    <section id="top" class="user-top">
+      <div class="top-background-img" id="top-backing">
+      </div>
+      <div class="top-background" id="top-bak">
+        <div class="top-content">
+          <div>
+        </div>
+      </div>
+      
+      <input type="checkbox" id="menu-ham">
+      <label for="menu-ham" class="menu-button">
+        <span id="hams" class="scroll-changed"></span>
+      </label>
+      <nav class="menu-container">
+        <br>
+        <a href="/">Top</a>
+        <a href="/search" onclick="closeMenu()" class="current-page">Search</a>
+        <a href="/news">News</a>
+        <a href="/mypage">My Page</a>
+      </nav>            
+      <div class="menu-background scroll-changed" id="menu-bak">
+        <h1><div class="header-img"></div></h1>
+      </div>            
+    </section>
+    
+    <section class="index-info">
+      <div id="user-container" class="user">
+        <h1>新規ユーザ登録</h1>
+        <form method="post" accept-charset="UTF-8" action="/user/sinup/entry">
+            <p class="form-required">姓名</p>
+            <div class="input-flex">
+              <input name="last_name" type="text" maxlength="20" placeholder="姓" class="form input border-right-none" required>
+              <input name="first_name" type="text" maxlength="20" placeholder="名" class="form input" required>
+            </div> 
+            <p class="form-required">ふりがな ( 姓名 ) </p>
+            <div class="input-flex">
+              <input name="last_name_h" type="text" maxlength="20" placeholder="ふりがな(姓)" class="form input border-right-none" pattern="[\u3041-\u3096]*" required>
+              <input type="first_name_h" maxlength="20" placeholder="ふりがな(名)" class="form input " pattern="[\u3041-\u3096]*" required>
+            </div>
+            <p class="form-required">種別</p>
+            
+            <div class="drop-down-con">
+            <div class="drop-down">
+              <select name="status" class="form input" id="select-status" required>
+                <option value="null">種別を選択して下さい</option>
+                <option value="honka-acp">産技高専(荒川)・本科</option>
+                <option value="senkou-acp">産技高専(荒川)・専攻科</option>                  
+                <option value="honka-scp">産技高専(品川)・本科</option>
+                <option value="senkou-scp">産技高専(品川)・専攻科</option>                  
+                <option value="syou">小学生</option>
+                <option value="tyu">中学生</option>                  
+                <option value="kou">高校生</option>                  
+                <option value="hogosya">保護者</option>  
+                <option value="other">その他</option>                
+              </select>
+              <label for="select-status">▼</label>
+            </div>
+            </div>  
+
+            <p class="form-required">学校名</p>
+            <input class="form input" type="text" name="school-name" placeholder="〇〇立〇〇高等専門学校" required>
+
+            <p class="form-required">学年</p>
+            <div class="drop-down-con">
+              <div class="drop-down">
+                <select name="status" class="form input" id="select-status" required>
+                  <option value="null">学年を選択して下さい</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>                  
+                  <option value="3">3</option>
+                  <option value="4">4</option>                  
+                  <option value="5">5</option>
+                  <option value="6">6</option>                  
+                </select>
+                <label for="select-status">▼</label>
+              </div>
+            </div>  
+
+            <p class="form-required">組・コース名</p>
+             <div class="drop-down-con">
+                <div class="drop-down">
+                  <select name="status" class="form input" id="select-status" required>
+                    <option value="null">コース・組を選択して下さい</option>
+                    
+                  </select>
+                  <label for="select-status">▼</label>
+                </div>
+              </div>  
+            <p class="form-required">メールアドレス</p>
+            <input type="email" name="email" class="email" placeholder="example@g.metro-cit.ac.jp" maxlength="60" minlength="3" pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$" required>
+            <button type="submit" class="login">認証へ進む ＞</button>
+        </form>       
+      </div>
+     
+        <div class="error-show">  
+            <div>
+                メールアドレスの入力形式が間違っています
+            </div>
+        </div>
+    </section>
+    <footer>
+      <p class="copyright"><small>&copy; 2021 Kousen Festival Committee (TMCIT-ACP). All Rights Reserved</small></p>
+    </footer>
+  </body>
+  <script>
+    // setting (change color)
+    window.onload = function(){
+        const spinner = document.getElementById('loading');
+        spinner.classList.add('loaded');
+
+        var userAgent = window.navigator.userAgent.toLowerCase();
+        
+        if(userAgent.indexOf('msie') != -1 ||
+           userAgent.indexOf('trident') != -1) {
+        } else if(userAgent.indexOf('edge') != -1) {
+        } else if(userAgent.indexOf('chrome') != -1) {
+        } else if(userAgent.indexOf('safari') != -1) {
+        } else if(userAgent.indexOf('firefox') != -1) {
+        } else if(userAgent.indexOf('opera') != -1) {
+        } else {
+        }
+    }
+  </script>
+</html>

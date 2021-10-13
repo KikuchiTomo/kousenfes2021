@@ -17,19 +17,32 @@ class UserControllClass < DBControllClass
   # @return ヒット数 [Int]
   def checkUserExist(uuid)
     # ユーザ数をカウント
-    sql = 'select count(*) from　kouhou_db.users where delete_flg=0 and uuid=?;'
-    cnt = execSql(sql, uuid).first
-    return cnt
+    sql = 'select count(*) from　kouhou.users where del_flg=0 and uuid=?;'
+    cnt = execSql(sql, uuid)
+    return -1 if cnt == nil
+    return cnt.first
   end
 
+  # ユーザパスコードの存在確認を行う
+  # @param uuid [String]
+  # @return ヒット数 [Int]
+  def checkUserPasscodeDataExist(uuid)
+    # ユーザ数をカウント
+    sql = 'select count(*) from　kouhou.tmp_users where del_flg=0 and uuid=?;'
+    cnt = execSql(sql, uuid)
+    return -1 if cnt == nil
+    return cnt.first
+  end
+  
   # Emailの一異性確認
   # @param email [String]
   # @return ヒット数 [Int]
   def checkUserEmail(email)
     # ユーザ数をカウント
-    sql = 'select count(*) from　kouhou_db.users where delete_flg=0 and emial=?;'
-    cnt = execSql(sql, email).first
-    return cnt
+    sql = 'select count(*) from　kouhou.users where del_flg=0 and emial=?;'
+    cnt = execSql(sql, email)
+    return -1 if cnt==nil
+    return cnt.first
   end
   
   # パスコードの生成を行う
@@ -44,40 +57,30 @@ class UserControllClass < DBControllClass
   def registerTmpPasscode(uuid, passcode)
     # 存在チェック
     return false if checkUserExist(uuid)!=1
-    # ソルトはXQQ2021
-    tmp_pass_hash   = HashSHA.get512(passcode + uuid + 'XQQ2021');
-    # 有効期限を10分
-    tmp_pass_expire = Time.now + 10 * 60;
-    # ユーザ情報を更新
-    sql = 'update kouhou_db.users set tmp_pass_hash=?, tmp_pass_expire=? where delete_flg=0 and uuid=?;'
-    execSql(sql, tmp_pass_hash, tmp_pass_expire, uuid)
-    return true
-  end
 
-  def registerUserInformation(config)
-    return false if checkUserExist(config[:uuid]) !=0
-    return false if checkUserEmail(config[:email])!=0
-    sql = 'insert into kouhou_db.users (uuid, email, pass_hash, tmp_pass_hash, tmp_pash_expire, permission, last_name, first_name, ip_last, grade_id, school_id, course_id, state) values (?,?,?,?,?,?,?,?,?,?,?,?,?);'
-    # ユーザを登録
-    execSql(sql,
-            config[:uuid],
-            config[:email],
-            config[:pass_hash],
-            config[:tmp_pass_hash],
-            config[:tmp_pass_expire],
-            config[:permission],
-            config[:last_name],
-            config[:first_name],
-            config[:ip_last],
-            config[:grade_id],
-            config[:school_id],
-            config[:course_id],
-            config[:state])
-    return true;
+    # ソルトはXQQ2021
+    passcode_hash   = HashSHA.get512(passcode + uuid + 'XQQ2021');
+    # 有効期限を10分
+    passcode_expire = Time.now + 10 * 60
+    passcode_count = checkUserPasscodeDataExsit(uuid)
+    if tmp_user_cnt==1 then
+      # 存在する場合は，更新する
+      # ユーザ情報を更新
+      sql = 'update kouhou.tmp_users set passcode_hash=?, access_key=?, expire=? where delete_flg=0 and uuid=?;'
+      execSql(sql, passcode_hash, access_key, passcode_expire, uuid)
+      return true
+    elsif tmp_user_cnt==0 then
+      # 存在する場合は，登録する
+      sql = 'insert into kouhou.tmp_users (uuid, passcode_hash, access_key, expire) values (?,?,?,?);'
+      execSql(sql, uuid, passcode_hash, access_key, passcode_expire)
+      return true
+    else
+      return false
+    end
   end
 
   GET '/user/sinup' do
-
+    erb: 
   end
 
   GET '/user/sinup/email_check' do

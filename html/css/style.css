@@ -150,3 +150,7 @@ code{
     border: 0.5px solid gray;
     color: #2e2e2e;
 }
+
+#menu-bak{
+    overflow: hidden;
+}

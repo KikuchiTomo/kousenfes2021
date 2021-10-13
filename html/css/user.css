@@ -419,3 +419,7 @@ footer{
     font-size: 0.5em;
     color: #0A62A9;
 }
+
+:disabled{
+    background: lightgrey;
+}

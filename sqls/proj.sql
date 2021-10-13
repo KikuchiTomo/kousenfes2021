@@ -1,0 +1,20 @@
+create table kouhou.proj (
+       id                 int  auto_increment not null,
+       title              varchar(60)         not null,
+       organizer          varchar(60)         not null,
+       located            varchar(60)         not null,
+       cate               int                 not null default 0,
+       description        text                not null,
+       sub_description    text                not null,
+       tags               text                not null,
+       words              text                not null,
+       image_path         text                not null,
+       icon_path          text                not null,
+       start_time         datetime,
+       end_time           datetime,
+       ena_flg            int                 not null default 1,
+       del_flg            int                 not null default 0,
+       reg_time           timestamp           not null default current_timestamp,
+       upd_time           timestamp           not null default current_timestamp on update current_timestamp,
+       primary key(id)
+ );
