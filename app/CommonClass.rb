@@ -8,11 +8,11 @@ require "sinatra/base"
 #
 class CommonClass < Sinatra::Base
   use Rack::Session::Cookie,
-      :key            => 'XKXOXSXEXNX', 
+      :key    => 'XKXOXSXEXNX', 
       :secret => 'G9j5LtEbxK0SeNyc',
       :expire_after => 3600 * 24 * 30
 
-  # 本番環境ではコメントアウト
+  # 本番環境
   set :environment, :production
 
     # Errorメッセージを表示する

@@ -22,14 +22,14 @@ class DBControllClass < CommonClass
     # Statementの用意
     statement = @mysql.prepare(sql)
     # コマンドの作成
-    command = 'statement.execute('
+    cmd = 'statement.execute('
     args.size.times do |index|
-      command += ',' if i>0
-      commnad += "args[#{index}]"
+      cmd += "," if index>0 
+      cmd += "args[#{index}]"
     end
-    command += ')'
+    cmd += ')'
     # コマンドをruby上で実行
-    return eval(command)
+    return eval(cmd)
   end
 
   before do

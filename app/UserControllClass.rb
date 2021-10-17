@@ -2,8 +2,10 @@
 require "rubygems"
 require "sinatra/base"
 require 'mysql2'
+require "cgi/escape"
 
 require "./functions/hash_class.rb"
+require "./functions/send_email.rb"
 require "./CommonClass.rb"
 require "./DBControllClass.rb"
 
@@ -17,10 +19,10 @@ class UserControllClass < DBControllClass
   # @return ヒット数 [Int]
   def checkUserExist(uuid)
     # ユーザ数をカウント
-    sql = 'select count(*) from　kouhou.users where del_flg=0 and uuid=?;'
-    cnt = execSql(sql, uuid)
+    sql = 'select uuid from kouhou.users where del_flg=? and uuid=?;'
+    cnt = execSql(sql, 0, uuid)
     return -1 if cnt == nil
-    return cnt.first
+    return cnt.size
   end
 
   # ユーザパスコードの存在確認を行う
@@ -28,10 +30,10 @@ class UserControllClass < DBControllClass
   # @return ヒット数 [Int]
   def checkUserPasscodeDataExist(uuid)
     # ユーザ数をカウント
-    sql = 'select count(*) from　kouhou.tmp_users where del_flg=0 and uuid=?;'
-    cnt = execSql(sql, uuid)
+    sql = 'select id from kouhou.tmp_users where del_flg=? and uuid=?;'
+    cnt = execSql(sql, 0, uuid)
     return -1 if cnt == nil
-    return cnt.first
+    return cnt.size
   end
   
   # Emailの一異性確認
@@ -39,51 +41,118 @@ class UserControllClass < DBControllClass
   # @return ヒット数 [Int]
   def checkUserEmail(email)
     # ユーザ数をカウント
-    sql = 'select count(*) from　kouhou.users where del_flg=0 and emial=?;'
-    cnt = execSql(sql, email)
+    sql = 'select uuid from kouhou.users where del_flg=? and email=?;'
+    cnt = execSql(sql, 0, email)
     return -1 if cnt==nil
-    return cnt.first
+    return cnt.size
   end
   
   # パスコードの生成を行う
   # @return passcode [String] パスコード
   def generateTmpPasscode()
-    passcode = SecureRandom.hex(8)
+    passcode = SecureRandom.alphanumeric(8)
     return passcode
   end
 
   # パスコードの登録を行う
   # @param passcode [String]　パスコード
-  def registerTmpPasscode(uuid, passcode)
+  def registerTmpPasscode(uuid, passcode, access_key, isupdate)
     # 存在チェック
-    return false if checkUserExist(uuid)!=1
+    user_cnt = checkUserExist(uuid)
+    return false if !(user_cnt==1||user_cnt==0)
 
     # ソルトはXQQ2021
     passcode_hash   = HashSHA.get512(passcode + uuid + 'XQQ2021');
     # 有効期限を10分
     passcode_expire = Time.now + 10 * 60
-    passcode_count = checkUserPasscodeDataExsit(uuid)
-    if tmp_user_cnt==1 then
+    if isupdate then
       # 存在する場合は，更新する
       # ユーザ情報を更新
-      sql = 'update kouhou.tmp_users set passcode_hash=?, access_key=?, expire=? where delete_flg=0 and uuid=?;'
+      puts "upd user -> #{uuid}"
+      sql = 'update kouhou.tmp_users set passcode_hash=?, access_key=?, expire=? where del_flg=0 and uuid=?;'
       execSql(sql, passcode_hash, access_key, passcode_expire, uuid)
       return true
-    elsif tmp_user_cnt==0 then
+    else
       # 存在する場合は，登録する
+      puts "reg user -> #{uuid}"
       sql = 'insert into kouhou.tmp_users (uuid, passcode_hash, access_key, expire) values (?,?,?,?);'
       execSql(sql, uuid, passcode_hash, access_key, passcode_expire)
       return true
-    else
-      return false
     end
   end
 
-  get '/user/sinup' do
+  def generateUserToken(uuid)
+    puts "#{Time.now} - Generate token - User"
+
+    token = SecureRandom.uuid # tokenログアウト
+    expire = Time.now + 60*60*24*30 # 30日後にログアウト        
+    sql = 'update kouhou.users set token=?,token_expire=? where uuid=?;'
+    # tokenを保存する
+    execSql(sql, token, expire, uuid)
+    res = {token: token, expire: expire}
+    return res
+  end
+
+  def discardUserToken(uuid)
+    puts "#{Time.now} - Discard token - User"
+
+    token  = 'setmetoken'
+    expire = Time.local(1960, 1, 1, 12, 0, 0, 0)
+    sql = 'update kouhou.users set token=?,token_expire=? where uuid=?;'
+    execSql(sql, token, expire)
+  end
+
+  def checkUserToken()
+    uuid = session[:uuid_session]
+    token = session[:token]
+
+    if uuid==nil||uuid==''
+      redirect '/kousenuser/logout'
+      return false
+    elsif token==nil||token==''
+      redirect '/kousenuser/logout'
+      return false
+    end
+
+    sql = 'select token,token_expire from kouhou.users where status=2 and del_flg=0 and uuid=?;'
+    res = execSql(sql, uuid)
+
+    if res.count==0
+      redirect '/kousenuser/logout'
+      return false
+    elsif res.count>1
+      redirect '/kousenuser/logout'
+      return false
+    end
+
+    expire_from_db_str = res.first['token_expire'].to_s
+    token_from_db  = res.first['token']
+    expire_from_db = Time.parse(expire_from_db_str)
+
+    if token_from_db=='setmetoken'
+      redirect '/kousenuser/logout'
+      return false
+    end
+
+    if token_from_db!=token
+      redirect '/kousenuser/logout'
+      return false
+    end
+
+    if (expire_from_db-Time.now)<0
+      redirect '/kousenuser/logout'
+      return false
+    end
+
+    puts "You logined : OK #{uuid}"
+    return true
+  end
+
+  get '/kousenuser/sinup' do
     erb :user_sinup
   end
 
-  post '/user/sinup' do
+  post '/kousenuser/sinup' do
     fname = params['first_name'] ||=''
     lname = params['last_name']  ||=''
     fname_rb = params['first_name_h'] ||=''
@@ -91,7 +160,7 @@ class UserControllClass < DBControllClass
     cate = params['cate'] ||=''
     cate = cate.to_i if cate!=''
     sname = params['school-name'] ||=''
-    grade = params['grade'] ||=''
+    grade = params['grade'] ||=-1
     course = params['course'] ||=''
     password = params['password'] ||=''
     email = params['email'] ||=''
@@ -139,22 +208,227 @@ class UserControllClass < DBControllClass
       end
     end
 
+    
     # uuid生成
     uuid = SecureRandom.uuid
-    if checkUserPasscodeDataExist(uuid)>0
+    uuid_cnt = checkUserPasscodeDataExist(uuid)
+    if uuid_cnt!=0
       raise CommonErrorView, '処理エラー-ユーザIDの生成に失敗しました．'
+      return false
+    end
+
+    if checkUserEmail(email)!=0
+      raise CommonErrorView, '処理エラー-このメールアドレスはすでに登録済みです.'
       return false
     end
     
     # passcode生成
     passcode = generateTmpPasscode()
+    access_key = HashSHA.get512(SecureRandom.uuid + "#{Time.now}")
     # DBへ登録
-    registerTmpPasscode(uuid, passcode)
+    result = registerTmpPasscode(uuid, passcode, access_key, false) if(uuid_cnt==0)
+    
+    if !result
+      raise CommonErrorView, '登録エラー-サーバで処理エラーが発生しました'
+      return false
+    end
 
     # 可読性が落ちるけどテーブル作る時間もないので
-    return fname
+    # 登録処理
+    sql = 'insert into kouhou.users (uuid, email, first_name, last_name, first_name_rb, last_name_rb, grade, passhash, token, token_expire, course, status) values (?,?,?,?,?,?,?,?,?,?,?,?);'
+    expired_time = Time.local(1960, 1, 1, 12, 0, 0, 0);
+    set_me_token = 'setmetoken'
+    grade_int = (grade!='') ? grade.to_i : -1; 
+    
+    # ソルトはXQQ2021
+    password_hash = HashSHA.get512(password + uuid + 'XQQ2021');
+    execSql(sql, uuid, email, fname, lname, fname_rb, lname_rb, grade_int, password_hash, set_me_token, expired_time, course, 0);
+    
+    # メール送る
+    sendAuthEmail(email, fname, passcode, access_key, uuid)
+
+    # メッセージ画面へ遷移
+    redirect '/user_sinup_msg.html'
+    return ''
   end
-    #TODO+ tempolary_user_passcodeのdelete_flagを1に
-    #TODO+ usersのenable_flagを2に
-    # 0 : 無効 , 1 : 未認証, 2 : 認証済み
+
+  get '/kousenuser/sinup/entry' do
+    puts "Entry...."
+    uuid = params['uuid'] ||=nil
+    access_key = params['accesskey'] ||=nil
+
+    # パラメータチェック
+    if uuid==nil || access_key==nil || uuid=='' || access_key==''
+      raise CommonErrorView, 'パラメータが不正です-指定されたパラメータは不正です。'
+      return false
+    end
+    puts "Params OK...."
+
+    # 存在と有効期限チェック      
+    sql = 'select status from kouhou.users where del_flg=0 and uuid=?;'
+    res = execSql(sql, uuid)
+
+    # ユーザの存在確認
+    if(res.size!=1 || res==nil)
+      raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。有効なユーザは存在しません。'
+      return false
+    end
+    puts "Exist OK...."
+
+    status = res.first['status'].to_i
+
+    # 前回、sinupの処理が行われているかステータスを確認(-1: 不正, 0:sinup直後, 1: アクセスキー承認, 2:パスコード承認・承認済み)
+    if(!(status==0||status==1))
+      raise CommonErrorView, 'ユーザステータスが不正です-指定されたUUIDのユーザは登録可能ではありません。'
+      return false;
+    end
+    puts "Status OK...."
+
+    sql = 'select access_key, expire from kouhou.tmp_users where del_flg=0 and ena_flg=1 and uuid=?;'
+    res = execSql(sql, uuid)
+
+    p res
+    # 一時パスコード保管テーブルの存在確認
+    if(res.size!=1||res==nil)
+      raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。有効な一時ユーザは存在しません。'
+      return false 
+    end
+    puts "DB OK...."
+
+    access_key_db = res.first['access_key']
+
+    # 有効期限確認
+    expire_time = Time.parse(res.first['expire'].to_s)
+    now_time = Time.now
+
+    if expire_time < now_time 
+      # 期限切れ
+      raise CommonErrorView, '有効期限切れです-指定URLは有効期限が切れています。'
+      return false
+    end
+
+    puts "Expire OK...."
+    # アクセスキーの確認
+    if access_key_db != access_key
+      raise CommonErrorView, '指定URLは不正です-指定URLのアクセスキーが不正です。'
+      return false
+    end
+
+    # ここまでたどり着いたらちゃんとしたアクセス
+    # 確認できたお
+    sql = 'update kouhou.users set status=? where uuid=?;'
+    execSql(sql, 1, uuid)
+
+    @uuid = uuid
+    erb :user_entry
+  end
+
+  post '/kousenuser/sinup/entry' do
+    passcode = params['passcode'] ||=''
+    uuid     = params['uuid'] ||=''
+
+    # パラメータチェック
+    if(passcode==''||uuid=='')
+      raise CommonErrorView, 'パラメータが不正です-指定されたパラメータは不正です。'
+      return false
+    end
+
+    # パスコードの長さは8
+    if(passcode.length!=8)
+      raise CommonErrorView, 'パスコードが間違っています-指定されたパラメータは不正です。'
+      return false
+    end
+
+    # ハッシュに変換
+    passcode_hash = HashSHA.get512(passcode + uuid + 'XQQ2021');
+
+    # サーバ処理
+    sql = 'select passcode_hash from kouhou.tmp_users where del_flg=0 and ena_flg=1 and uuid=?;'
+    res = execSql(sql, uuid)
+
+    puts "#{res.size} entry ... "
+    # 返ってきたデータの数がおかしくないか
+    if(res==nil||res.size!=1)
+      raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。有効な一時ユーザは存在しません。'
+      return false 
+    end
+
+    # パスコードのチェック
+    hash = res.first['passcode_hash']
+    if(hash!=passcode_hash)
+      raise CommonErrorView, 'パスコードが間違っています-指定されたパラメータは不正です。'
+      return false
+    end
+
+    # ここまでたどり着いたら正解
+    # ユーザを有効にする
+    sql = 'update kouhou.users set status=? where uuid=?;'
+    execSql(sql, 2, uuid)
+
+    # ログイン画面にリダイレクト
+    redirect '/user_login.html'
+    return true
+  end
+
+  post '/kousenuser/STN/login' do
+    email  = params['STMxxOHCE'] ||=''
+    passwd = params['STNxxECHO'] ||=''
+  
+    sql = 'select * from kouhou.users where del_flg=0 and status=2 and email=?;'
+    res = execSql(sql, email)
+
+    if res.size!=1||res==nil||res.first['status'].to_i!=2||res.first['del_flg']==1
+      raise CommonErrorView, 'IDまたはパスワードが不正です-指定されたEmailアドレスまたはパスワードが不正です。'
+      return false
+    end
+
+    person = res.first # 一つ取り出す
+    uuid        = person['uuid']
+    passhash_db = person['password_hash']
+    passhash_pm = HashSHA.get512(passwd + uuid + 'XQQ2021');
+
+    # パスワードチェック
+    if passhash_db==passhash_pm
+      raise CommonErrorView, 'IDまたはパスワードが不正です-指定されたEmailアドレスまたはパスワードが不正です。'
+      return false
+    end
+
+    ses = generateUserToken(uuid)
+
+    session[:uuid_session] = uuid
+    session[:email_session] = email
+    session[:token] = ses[:token]
+    session[:expire] = ses[:expire]
+
+    isLogined = checkUserToken()
+
+    if isLogined
+      return "LOGINED"
+    else
+      return "NOT_LOGINED"
+    end
+  end
+
+  get '/kakunin_login' do
+    isLogined = checkUserToken()
+
+    if isLogined
+      return "LOGINED"
+    else
+      return "NOT_LOGINED"
+    end
+  
+  end
+
+  get '/kousenuser/logout' do
+    uuid = session[:uuid]
+    discardUserToken(uuid) if uuid!=nil && uuid!=''
+
+    session[:uuid_session] = nil
+    session[:email_session] = nil
+    session[:token] = nil
+    session[:expire] = nil
+
+    return "LOGOUTED"
+  end
 end
