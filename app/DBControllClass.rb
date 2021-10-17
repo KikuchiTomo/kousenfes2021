@@ -3,7 +3,7 @@ require "rubygems"
 require "sinatra/base"
 require 'mysql2'
 
-require "../CommonClass/common_class.rb"
+require "./CommonClass.rb"
 
 #
 # DBへのコントロールを行うクラス

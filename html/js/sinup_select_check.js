@@ -24,16 +24,16 @@ const selectCheck = () => {
         g3.style.display = 'inline';
         g4.style.display = 'inline';
         g5.style.display = 'inline';   
-        g3.disabled = true;
-        g4.disabled = true;
-        g5.disabled = true;
+        g3.disabled = false;
+        g4.disabled = false;
+        g5.disabled = false;
     }else if(idx==2){
         // 専攻科
         e1.disabled = false;
         e2.disabled = true;
-        g3.disabled = false;
-        g4.disabled = false;
-        g5.disabled = false;
+        g3.disabled = true;
+        g4.disabled = true;
+        g5.disabled = true;
         g3.style.display = 'none';
         g4.style.display = 'none';
         g5.style.display = 'none';
@@ -43,8 +43,8 @@ const selectCheck = () => {
         e2.disabled = true;
         g4.style.display = 'none';
         g5.style.display = 'none';
-        g4.disabled = false;
-        g5.disabled = false;
+        g4.disabled = true;
+        g5.disabled = true        ;
         s0.disabled = false;
     }else{
         // 保護者・その他
@@ -278,5 +278,22 @@ const selectCheckSafari = () => {
         // 保護者・その他
         e1.disabled = true;
         e2.disabled = true;
+    }
+}
+
+const checkGradeShowHidden = () => {
+    var sel0 = document.getElementById('select-course');
+    var sel1 = document.getElementById('select-class');
+    var idx = document.getElementById('select-grade').selectedIndex;
+    if(idx==1){
+        sel0.style.display = 'none';
+        sel0.disabled = true;
+        sel1.style.display = 'inline';
+        sel1.disabled = false;
+    }else{
+        sel0.style.display = 'inline';
+        sel0.disabled = false;
+        sel1.style.display = 'none';
+        sel1.disabled = true;
     }
 }

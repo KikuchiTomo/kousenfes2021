@@ -79,60 +79,82 @@ class UserControllClass < DBControllClass
     end
   end
 
-  GET '/user/sinup' do
-    erb: 
+  get '/user/sinup' do
+    erb :user_sinup
   end
 
-  GET '/user/sinup/email_check' do
-    param_access_key = params[:access_key] ||= ''
-    param_uuid       = params[:uuid]       ||= ''
+  post '/user/sinup' do
+    fname = params['first_name'] ||=''
+    lname = params['last_name']  ||=''
+    fname_rb = params['first_name_h'] ||=''
+    lname_rb = params['last_name_h']  ||=''
+    cate = params['cate'] ||=''
+    cate = cate.to_i if cate!=''
+    sname = params['school-name'] ||=''
+    grade = params['grade'] ||=''
+    course = params['course'] ||=''
+    password = params['password'] ||=''
+    email = params['email'] ||=''
 
-    # 必須パラメータがない時は，共通エラー画面へ遷移
-    if isNilParams(param_uuid, param_access_key)
-      raise CommonErrorView, '不正なパラメータ-必須パラメータが取得できませんでした'
-      return
+    mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+
+    # 内容チェック    
+    if fname==''||lname==''||fname_rb==''||lname_rb=='' # 名前の欄が空白
+      raise CommonErrorView, '入力が不正です-氏名，またはふりがなのデータが不正です．お手数ですが入力し直してください'
+      return false
+    elsif password=='' # パスワードが空欄
+      raise CommonErrorView, '入力が不正です-登録パスワードが入力されていません．'
+      return false
+    elsif password.size<8||password.size>32
+      raise CommonErrorView, '入力が不正です-登録パスワードの形式が不正です．'
+      return false
+    elsif email=='' # メールアドレスが空欄
+      raise CommonErrorView, '入力が不正です-登録メールアドレスが入力されていません．'
+      return false
+    elsif !email.match? mailRegex # メールアドレスが不正
+      raise CommonErrorView, '入力が不正です-登録メールアドレスの形式が不正です．'
+      return false
+    elsif cate!='' # カテゴリ入力あり
+      if cate>=1&&cate<=5 # 1~5の間のintである
+        if cate==1 # 高専本科
+          if course==''||grade==''
+            raise CommonErrorView, '入力が不正です-コースまたは学年が登録されていません'
+            return false
+          end
+        elsif cate==2 # 高専専攻科
+          if course==''
+            raise CommonErrorView, '入力が不正です-学年が登録されていません'
+            return false
+          end
+        elsif cate==3 # 中学生
+          if grade==''||sname==''
+            raise CommonErrorView, '入力が不正です-学年または学校名が登録されていません'
+            return false
+          end
+        else # 保護者・その他
+        end
+      else # 1~5の間以外
+        raise CommonErrorView, '入力が不正です-学年入力形式が不正です．'
+        return false
+      end
     end
 
-    # uuidからアクセスキーを調べる
-    sql = 'select access_key from kouhou_db.tempolary_user_passcode where uuid=? and enable_flag=1 and delete_flag=0;'
-    res = execSql(sql, param_uuid);
-    access_key = res.first[:access_key]
-
-    # 共通エラー画面に飛ばす
-    if(access_key != param_access_key)
-      raise CommonErrorView, "不正なアクセス-アクセスキー("+param_access_key+")は存在しませんでした."
-      return      
+    # uuid生成
+    uuid = SecureRandom.uuid
+    if checkUserPasscodeDataExist(uuid)>0
+      raise CommonErrorView, '処理エラー-ユーザIDの生成に失敗しました．'
+      return false
     end
+    
+    # passcode生成
+    passcode = generateTmpPasscode()
+    # DBへ登録
+    registerTmpPasscode(uuid, passcode)
 
-    # enable_flagを2(アクセスキー認証済み)に変更
-    sql = 'update kouhou_db.tempolary_user_passcode set enable_flag=? where uuid=? and enable_flag=1 and delete_flag=0;'
-    execSql(sql, 2, param_uuid);
-
-    erb :sinup_email_check
+    # 可読性が落ちるけどテーブル作る時間もないので
+    return fname
   end
-
-  POST '/user/sinup/email_check' do
-    param_uuid = params[:uuid] ||= ''
-    param_passcode = params[:passcode] ||=''
-
-    if isNilParams(param_uuid, param_passcode)
-      raise CommonErrorView, '不正なパラメータ-必須パラメータが取得できませんでした'
-      return 
-    end
-
-    sql = 'select passcode_hash from kouhou_db.tempolary_user_passcode where uuid=? and enable_flag=2 and delete_flag=0;'
-    res = execSql(sql, param_uuid);
-    passcode_hash = res.first[:passcode_hash]
-
-    param_passcode_hash = HashSHA.get512(param_passcode + param_uuid + 'XQQ2021')
-
-    if param_passcode_hash != passcode_hash
-      raise CommonErrorView, "不正なアクセス-このパスコードは有効ではありません"
-      return            
-    end
-
     #TODO+ tempolary_user_passcodeのdelete_flagを1に
     #TODO+ usersのenable_flagを2に
     # 0 : 無効 , 1 : 未認証, 2 : 認証済み
-  end
 end
