@@ -213,17 +213,18 @@ nav.menu-container{
 }
 
 .top-background-img{
-    background-image: url("../img/004.jpg");
+    background-image: url("../img/top_produce_by_nakano_resize1.png");
     position: absolute;
+    background-position: center;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: bottom;
     filter: brightness(50%);
 }
 
 .can-animation{
     animation: back 50s linear infinite;
-    animation-direction:  alternate;    
+    animation-direction:  alternate-reverse;    
 }
 
 /* background */

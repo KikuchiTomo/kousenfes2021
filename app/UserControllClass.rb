@@ -167,6 +167,8 @@ class UserControllClass < DBControllClass
 
     mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
+    # DEBUG 
+    start0 = Time.now
     # 内容チェック    
     if fname==''||lname==''||fname_rb==''||lname_rb=='' # 名前の欄が空白
       raise CommonErrorView, '入力が不正です-氏名，またはふりがなのデータが不正です．お手数ですが入力し直してください'
@@ -208,10 +210,11 @@ class UserControllClass < DBControllClass
       end
     end
 
-    
+    #puts "#{(Time.now - start0)} ValChekced"
     # uuid生成
     uuid = SecureRandom.uuid
     uuid_cnt = checkUserPasscodeDataExist(uuid)
+    #puts "#{(Time.now - start0)} PasscodeChekced"
     if uuid_cnt!=0
       raise CommonErrorView, '処理エラー-ユーザIDの生成に失敗しました．'
       return false
@@ -221,13 +224,13 @@ class UserControllClass < DBControllClass
       raise CommonErrorView, '処理エラー-このメールアドレスはすでに登録済みです.'
       return false
     end
-    
+    #puts "#{(Time.now - start0)} EmailChekced"
     # passcode生成
     passcode = generateTmpPasscode()
     access_key = HashSHA.get512(SecureRandom.uuid + "#{Time.now}")
     # DBへ登録
     result = registerTmpPasscode(uuid, passcode, access_key, false) if(uuid_cnt==0)
-    
+    #puts "#{(Time.now - start0)} Reged tmp"
     if !result
       raise CommonErrorView, '登録エラー-サーバで処理エラーが発生しました'
       return false
@@ -243,13 +246,13 @@ class UserControllClass < DBControllClass
     # ソルトはXQQ2021
     password_hash = HashSHA.get512(password + uuid + 'XQQ2021');
     execSql(sql, uuid, email, fname, lname, fname_rb, lname_rb, grade_int, password_hash, set_me_token, expired_time, course, 0);
-    
+    puts "#{(Time.now - start0)} Reged user"
+
     # メール送る
     sendAuthEmail(email, fname, passcode, access_key, uuid)
-
+    puts "#{(Time.now - start0)} Sent email"
     # メッセージ画面へ遷移
     redirect '/user_sinup_msg.html'
-    return ''
   end
 
   get '/kousenuser/sinup/entry' do
@@ -402,13 +405,25 @@ class UserControllClass < DBControllClass
 
     isLogined = checkUserToken()
 
-    if isLogined
-      return "LOGINED"
-    else
-      return "NOT_LOGINED"
+    if !isLogined
+      raise CommonErrorView, "整合性エラー-ログイン状態が不正です。"
+      return false;
     end
+
+    redirect '/kousen/mypage'
   end
 
+  get '/kousen/mypage' do
+    isLogined = checkUserToken()
+    return 403 if !isLogined
+    
+    uuid = session[:uuid_session]
+    sql = 'select first_name from kouhou.users where del_flg=0 and status=2 and uuid=?;'
+    res = execSql(sql, uuid)
+    @first_name = res.first['first_name']
+    erb :user_mypage
+  end
+  
   get '/kakunin_login' do
     isLogined = checkUserToken()
 
@@ -429,6 +444,6 @@ class UserControllClass < DBControllClass
     session[:token] = nil
     session[:expire] = nil
 
-    return "LOGOUTED"
+    erb :user_logout_msg
   end
 end

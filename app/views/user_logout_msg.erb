@@ -4,7 +4,7 @@
     <!--　覗いた人への言い訳: 結合テストも単体テストしてないので，バックエンド側にバグあるかもしれないけど，一応セキュリティの対策はしてます -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
-    <title>ユーザ認証 - 第53回 高専祭</title>
+    <title>ログアウト - 第53回 高専祭</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,20 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/user.css">
+    <link rel="stylesheet" href="/css/error.css">
     <script src="/js/scroll_change_color.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-    <script>
-      var ua = navigator.userAgent.toLowerCase();
-      var isiOS = (ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1);
-      if(isiOS) {
-        var viewport = document.querySelector('meta[name="viewport"]');
-        if(viewport) {
-          var viewportContent = viewport.getAttribute('content');
-          viewport.setAttribute('content', viewportContent + ', user-scalable=no');
-        }
-      }
-    </script>
     <script>
       function closeMenu(){
           let menu_elem = document.getElementById('menu-ham');
@@ -54,7 +43,7 @@
       <nav class="menu-container">
         <br>
         <a href="/">Top</a>
-        <a href="/search" onclick="closeMenu()" class="current-page">Search</a>
+        <a href="/search" onclick="closeMenu()" class="">Search</a>
         <a href="/news">News</a>
         <a href="/mypage">My Page</a>
       </nav>            
@@ -65,26 +54,17 @@
     
     <section class="index-info">
       <div id="user-container" class="user">
-        <h1>ユーザ認証</h1>
-        <form method="post" accept-charset="utf-8" action="/kousenuser/sinup/entry"> 
-            <input type="hidden" name="uuid" value="<%= @uuid %>" require>
-            <input type="text" name="passcode" class="pass" placeholder="Your Passcode" maxlength="8" minlength="8" required>
-            <button type="submit" class="login">CONFIRM ＞</button>
-        </form>
-       
-        <small class="reset-info">有効期限は10分です</small>
-        <a href="/user/reset">パスコードの期限切れの方はこちら</a>        
+        <h1 class="error-title">ログアウト！</h1>
+        <p class="error-desc">ログアウト済みです。</p>
       </div>
      
-        <!-- <div class="error-show">
-            <div>
-                ユーザが存在しません
-            </div>
-            <div>
-                データベース上の整合性が取れていません．管理者へ連絡して下さい
-                <a href="./" class="report">連絡はこちらから</a>
-            </div>
-        </div> -->
+      <div class="error-show">
+        <p>
+          ログインしたい？<br>
+          今すぐ、下のリンクを押そう！
+          <a href="/user_login.html" class="back-link">ログインへ</a>          
+        </p>
+      </div>
     </section>
     <footer>
       <p class="copyright"><small>&copy; 2021 Kousen Festival Committee (TMCIT-ACP). All Rights Reserved</small></p>
