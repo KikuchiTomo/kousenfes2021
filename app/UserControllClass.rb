@@ -99,18 +99,18 @@ class UserControllClass < DBControllClass
     token  = 'setmetoken'
     expire = Time.local(1960, 1, 1, 12, 0, 0, 0)
     sql = 'update kouhou.users set token=?,token_expire=? where uuid=?;'
-    execSql(sql, token, expire)
+    execSql(sql, token, expire, uuid)
   end
 
-  def checkUserToken()
-    uuid = session[:uuid_session]
+  def checkUserToken(url)
+    uuid = session[:uuid]
     token = session[:token]
 
     if uuid==nil||uuid==''
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     elsif token==nil||token==''
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     end
 
@@ -118,10 +118,10 @@ class UserControllClass < DBControllClass
     res = execSql(sql, uuid)
 
     if res.count==0
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     elsif res.count>1
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     end
 
@@ -130,17 +130,17 @@ class UserControllClass < DBControllClass
     expire_from_db = Time.parse(expire_from_db_str)
 
     if token_from_db=='setmetoken'
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     end
 
     if token_from_db!=token
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     end
 
     if (expire_from_db-Time.now)<0
-      redirect '/kousenuser/logout'
+      redirect url
       return false
     end
 
@@ -352,7 +352,7 @@ class UserControllClass < DBControllClass
     puts "#{res.size} entry ... "
     # 返ってきたデータの数がおかしくないか
     if(res==nil||res.size!=1)
-      raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。有効な一時ユーザは存在しません。'
+      raise CommonErrorView, '整合性エラー-有効な一時ユーザは存在しません。'
       return false 
     end
 
@@ -381,29 +381,30 @@ class UserControllClass < DBControllClass
     res = execSql(sql, email)
 
     if res.size!=1||res==nil||res.first['status'].to_i!=2||res.first['del_flg']==1
-      raise CommonErrorView, 'IDまたはパスワードが不正です-指定されたEmailアドレスまたはパスワードが不正です。'
+      raise CommonErrorView, 'ユーザエラー-Emailまたはパスワードが不正です。'
       return false
     end
 
-    person = res.first # 一つ取り出す
+    person      = res.first # 一つ取り出す
     uuid        = person['uuid']
-    passhash_db = person['password_hash']
+    passhash_db = person['passhash']
     passhash_pm = HashSHA.get512(passwd + uuid + 'XQQ2021');
 
     # パスワードチェック
-    if passhash_db==passhash_pm
-      raise CommonErrorView, 'IDまたはパスワードが不正です-指定されたEmailアドレスまたはパスワードが不正です。'
+    puts "BD => #{passhash_db} , PARAM => #{passhash_pm}"
+    if passhash_db!=passhash_pm
+      raise CommonErrorView, 'ユーザエラー-Emailまたはパスワードが不正です。'
       return false
     end
 
     ses = generateUserToken(uuid)
 
-    session[:uuid_session] = uuid
-    session[:email_session] = email
+    session[:uuid] = uuid
+    session[:email] = email
     session[:token] = ses[:token]
     session[:expire] = ses[:expire]
 
-    isLogined = checkUserToken()
+    isLogined = checkUserToken('/user_login.html')
 
     if !isLogined
       raise CommonErrorView, "整合性エラー-ログイン状態が不正です。"
@@ -414,10 +415,10 @@ class UserControllClass < DBControllClass
   end
 
   get '/kousen/mypage' do
-    isLogined = checkUserToken()
+    isLogined = checkUserToken('/user_login.html')
     return 403 if !isLogined
     
-    uuid = session[:uuid_session]
+    uuid = session[:uuid]
     sql = 'select first_name from kouhou.users where del_flg=0 and status=2 and uuid=?;'
     res = execSql(sql, uuid)
     @first_name = res.first['first_name']
@@ -425,7 +426,7 @@ class UserControllClass < DBControllClass
   end
   
   get '/kakunin_login' do
-    isLogined = checkUserToken()
+    isLogined = checkUserToken('/logouted')
 
     if isLogined
       return "LOGINED"
