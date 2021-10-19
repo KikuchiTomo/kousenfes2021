@@ -12,3 +12,6 @@ create table kouhou.news (
        upd_time           timestamp           not null default current_timestamp on update current_timestamp,
        primary key(id)
  );
+
+# example
+# insert into news (title,description,detail_title,detail_desc,notify_datetime,image_path) values ("高専祭サイト開設", "サイトに関するお知らせです", "あああ","あああ", "2021-10-19", "NOIMAGE");

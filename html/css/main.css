@@ -472,10 +472,11 @@ div.proj-content::-webkit-scrollbar{
 
 .thum-one-context{
     border-top: none;
+    font-size: 13px;
 }
 
 .thum-one-context h4{
-    margin: 5% 0%;
+    margin: 7px 0 5px 0; 
     font-size: 13px;
 }
 
@@ -773,6 +774,10 @@ img.top-img{
     transform: translate3d(0,0,0); 
 }
 
+.pointer{
+    cursor: pointer;
+}
+
 
 /* for tablet */
 @media screen and (min-width: 480px) {
@@ -785,7 +790,7 @@ img.top-img{
     }
 
     .thum-one-context h4{
-        margin: 5% 0%;        
+        margin: 9px 0%;
     }
 
     .date{
@@ -824,7 +829,7 @@ img.top-img{
     }
 
     .thum-one-context h4{
-        margin: 5% 0%;
+        margin: 9px 0%;
     }
 
     .date{

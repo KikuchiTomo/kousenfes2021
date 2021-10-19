@@ -1,3 +1,27 @@
+<%
+  news_str = ''
+  @news_ary.each { |news|
+  is_noimg = ''
+  if (news['img']==''||news['img']==nil)
+    is_noimg = 'none'
+    news['img'] = '/img/TMCIT_LOGO_REV.png'
+  end  
+news_str += "<div class=\"thum-one-container pointer\">"\
+            + "<a href=\"/news/detail?id=#{news['id']}\">"\
+              + "<div class=\"thum-one new\">"\
+                + "<div class=\"thum-one-icon #{is_noimg} pointer\">"\
+                  + "<img src=\"#{news['img']}\" class=\"\">"\
+                + "</div>"\
+                + "<div class=\"thum-one-context\">"\
+                  + "<h4>#{news['title']}</h4>"\
+                  + "<p><small>#{news['date']}</small><br>#{news['summary']}</p>"\
+                + "</div>"\
+              + "</div>"\
+            + "</a>"\
+          +"</div>"
+  }
+%>
+
 <!DOCTYPE html>
 <html lang="ja" id="html-container" class="scroll-bar scroll-bar-width">
 
@@ -48,10 +72,10 @@
       <span id="hams"></span>
     </label>
     <nav class="menu-container">
-      <a href="/" onclick="closeMenu()" class="current-page">Top</a>
-      <a href="/search">Search</a>
-      <a href="/news">News</a>
-      <a href="/kousen/mypage">My Page</a>
+      <a href="/" onclick="closeMenu()" class="current-page pointer">Top</a>
+      <a href="/search" class="pointer">Search</a>
+      <a href="/news" class="pointer">News</a>
+      <a href="/kousen/mypage" class="pointer">My Page</a>
     </nav>
     <div class="menu-background" id="menu-bak">
       <h1>
@@ -68,96 +92,9 @@
     </div>
     <div class="news-content">
       <div class="news-col flex-divs scroll-bar scroll-bar-height">
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <p></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <p></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <div class="date">2021/11/12</div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <p></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <p></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="news?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4>Thum Title</h4>
-                <p></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
+      
+        <%= news_str %>
+       
       </div>
     </div>
     <a href="news" class="news-link">一覧を表示</a>
