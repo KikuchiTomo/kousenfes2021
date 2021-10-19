@@ -86,7 +86,7 @@ class UserControllClass < DBControllClass
 
     token = SecureRandom.uuid # tokenログアウト
     expire = Time.now + 60*60*24*30 # 30日後にログアウト        
-    sql = 'update kouhou.users set token=?,token_expire=? where uuid=?;'
+    sql = 'update kouhou.users set token=?,token_expire=? where status=2 and del_flg=0 and uuid=?;'
     # tokenを保存する
     execSql(sql, token, expire, uuid)
     res = {token: token, expire: expire}
@@ -98,7 +98,7 @@ class UserControllClass < DBControllClass
 
     token  = 'setmetoken'
     expire = Time.local(1960, 1, 1, 12, 0, 0, 0)
-    sql = 'update kouhou.users set token=?,token_expire=? where uuid=?;'
+    sql = 'update kouhou.users set token=?,token_expire=? where status=2 and del_flg=0 and uuid=?;'
     execSql(sql, token, expire, uuid)
   end
 
@@ -107,10 +107,10 @@ class UserControllClass < DBControllClass
     token = session[:token]
 
     if uuid==nil||uuid==''
-      redirect url
+      redirect to(url)
       return false
     elsif token==nil||token==''
-      redirect url
+      redirect to(url)
       return false
     end
 
@@ -118,10 +118,10 @@ class UserControllClass < DBControllClass
     res = execSql(sql, uuid)
 
     if res.count==0
-      redirect url
+      redirect to(url)
       return false
     elsif res.count>1
-      redirect url
+      redirect to(url)
       return false
     end
 
@@ -130,17 +130,17 @@ class UserControllClass < DBControllClass
     expire_from_db = Time.parse(expire_from_db_str)
 
     if token_from_db=='setmetoken'
-      redirect url
+      redirect to(url)
       return false
     end
 
     if token_from_db!=token
-      redirect url
+      redirect to(url)
       return false
     end
 
     if (expire_from_db-Time.now)<0
-      redirect url
+      redirect to(url)
       return false
     end
 
@@ -252,7 +252,7 @@ class UserControllClass < DBControllClass
     sendAuthEmail(email, fname, passcode, access_key, uuid)
     puts "#{(Time.now - start0)} Sent email"
     # メッセージ画面へ遷移
-    redirect '/user_sinup_msg.html'
+    redirect to('/user_sinup_msg.html')
   end
 
   get '/kousenuser/sinup/entry' do
@@ -369,8 +369,12 @@ class UserControllClass < DBControllClass
     execSql(sql, 2, uuid)
 
     # ログイン画面にリダイレクト
-    redirect '/user_login.html'
+    redirect to('/kousenuser/login')
     return true
+  end
+
+  get '/kousenuser/login' do
+    erb :user_login
   end
 
   post '/kousenuser/STN/login' do
@@ -404,18 +408,11 @@ class UserControllClass < DBControllClass
     session[:token] = ses[:token]
     session[:expire] = ses[:expire]
 
-    isLogined = checkUserToken('/user_login.html')
-
-    if !isLogined
-      raise CommonErrorView, "整合性エラー-ログイン状態が不正です。"
-      return false;
-    end
-
-    redirect '/kousen/mypage'
+    redirect to('/kousen/mypage')
   end
 
   get '/kousen/mypage' do
-    isLogined = checkUserToken('/user_login.html')
+    isLogined = checkUserToken('/kousenuser/logout')
     return 403 if !isLogined
     
     uuid = session[:uuid]
@@ -439,12 +436,11 @@ class UserControllClass < DBControllClass
   get '/kousenuser/logout' do
     uuid = session[:uuid]
     discardUserToken(uuid) if uuid!=nil && uuid!=''
-
-    session[:uuid_session] = nil
-    session[:email_session] = nil
+    session[:uuid] = nil
+    session[:email] = nil
     session[:token] = nil
     session[:expire] = nil
-
-    erb :user_logout_msg
+    redirect '/kousenuser/login'
+    return true
   end
 end

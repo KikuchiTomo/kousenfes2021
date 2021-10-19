@@ -46,9 +46,10 @@ def sendAuthEmail(email, username, passcode, access_key, uuid)
 有効期間は10分です。
 
 パスコード : #{passcode}
+
 URL : https://www.kousensai.jp/kousenuser/sinup/entry?accesskey=#{access_key}&uuid=#{uuid}
 
-なお、パスコードが期限切れとなった場合、お手数ですが以下のリンクより再度パスコード発行の手続きお願い致します。
+なお、パスコードが期限切れとなった場合には、以下のリンクより再発行の手続きをお願い致します。
 
 パスコード再発行URL : https://www.kousensai.jp/kousenuser/reset
 
@@ -62,6 +63,32 @@ Email : kousensai.r3@gmail.com
 フォーム : https://docs.google.com/forms/d/e/1FAIpQLScUdvHRpl3yCUlBOkbA3yVFoS79nrCiL0_owiUpbx4-87g5jw/viewform
 
 * 上記のメールアドレスは、実行委員会全体のメールアドレスです。広報部署専用ではありませんので、Webシステム上の不具合については、なるべくGoogleフォームにご連絡ください。
+EOS
+    sendEmail(email, subject, body)
+end
+
+# 認証用メールを送信する
+# @param email
+# @param username 
+# @param passcode
+# @param access_key
+# @param uuid
+# @param expire
+def sendAuthAdminEmail(email, username, passcode, access_key, uuid)
+    subject = "CMSユーザ認証のお願い【産技高専祭】"
+    body = <<EOS
+
+ #{username} 様
+
+パスワード認証のパスコードが発行されました。以下のリンクを開いて、パスコードを入力してください。
+有効期間は10分です。
+
+パスコード : #{passcode}
+
+URL : https://www.kousensai.jp/kousenadmin/sinup/entry?accesskey=#{access_key}&uuid=#{uuid}
+
+なお、パスコードが期限切れとなった場合には、高専祭広報部署にパスコードの再発行を依頼してください。
+
 EOS
     sendEmail(email, subject, body)
 end
