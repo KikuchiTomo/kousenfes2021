@@ -22,56 +22,55 @@
         </a>
     </div>
     <div class="main-content">
-        <form action="/kousenadmin/proj/update/edit" method="post" accept-charset="utf-8"></form>
+        <form action="/kousenadmin/proj/update/edit" method="post" accept-charset="utf-8">
             <div class="menu">
                 <button type="submit" class="green">サーバにアップロード</button>&nbsp;
-                <a href="/kousenadmin/proj/update/delete?id=1" class="red">この企画を削除</a>
+                <a href="/kousenadmin/proj/update/delete?id=<%= @proj['id'] %>" class="red"  onclick="return confirm('本当に削除しますか？')">この企画を削除</a>
             </div>
             <div class="main-container">
                 <small>ICON画像</small>
                 <div>
-                    <img id="preview-area-icon" src="/img/TMCIT_LOGO_REV_M.png" style="height:180px; width: 180px; object-fit: contain;">
-                    <input type="file" name="icon-path" id="img">
+                    <input type="file" name="img" id="img">
+                    <input type="hidden" name="icon_path" value="<%= @proj['icon'] %>">
                 </div>
                 <small>ヘッダー画像</small>
                 <div>
-                    <img id="preview-area-image" src="/img/TMCIT_LOGO_REV_M.png" style="height:180px; width: 180px; object-fit: contain;">
                     <input type="file" name="img" id="img">
+                    <input type="hidden" name="image_path" value="<%= @proj['image'] %>">
                 </div>
+                <input type="hidden" name="id" value="<%= @proj['id'] %>" required>
                 <small>企画タイトル</small>
-                <input type="text" name="sub-title" maxlength="30" placeholder="例：ワクワクライブなど">
+                <input type="text" name="title" maxlength="30" placeholder="例：ワクワクライブなど" value="<%= @proj['title'] %>" required>
                 <small>企画者名・組織名</small>
-                <input type="text" name="tutle" maxlength="30" placeholder="例：〇〇部・〇〇同好会・〇〇研究室など">
+                <input type="text" name="organizer" maxlength="30" placeholder="例：〇〇部・〇〇同好会・〇〇研究室など" value="<%= @proj['organizer'] %>" required>
                 <small>企画場所</small>
-                <select>
-                <option>企画場所を選択してください</option>
-                <option>第３講義室</option>
-                <option>第２講義室</option>
-                <option>第１講義室</option>
+                <select name="located" required>
+                    <% 
+                        locate_html = ''
+                        @locates.each{ |locate|
+                            locate_html += "<option value=\"#{locate[0]}\" #{(locate[0]==@proj['located'].to_i) ? "selected" : "" }>#{locate[1]}</option>"
+                        }
+                    %>
+                    <%= locate_html %>
                 </select>
                 <small>企画種類</small>
-                <select>
-                <option>企画種類を選択してください</option>
-                <option>オンライン(配信)</option>
-                <option>オンライン(ライブ)</option>
-                <option>展示</option>
+                <select name="cate" required>
+                    <% 
+                        cate_html = ''
+                        @cates.each{ |cate|
+                            cate_html += "<option value=\"#{cate[0]}\" #{(cate[0]==@proj['cate'].to_i) ? "selected" : "" }>#{cate[1]}</option>"
+                        }
+                    %>
+                    <%= cate_html %>
                 </select>
                 <small>企画内容(詳細画面に表示)<small>[Markdown形式]</small></small>
-                <textarea name="content" id="content">
-例)
-## ビンゴ大会概要
-### 開始日時
-○○時○○分～
-### 参加方法
-下記URLでアカウントを作成し、ビンゴ大会に参加してください  
-[リンク表示名](URL)
-                </textarea>
+                <textarea name="description" id="content" required><%= @proj['desc'] %></textarea>
+                <small>企画内容summary(TOPページに表示)</small>
+                <input type="text" name="sub_description" maxlength="30" placeholder="例：○○部のライブです！など" value="<%= @proj['sub_desc'] %>" required>
                 <small>タグ</small>
-                <textarea name="content" id="content">#タグを改行区切りで入力
-                </textarea>
+                <textarea name="tags" id="content" required><%= @proj['tags'] %></textarea>
                 <small>検索キーワード</small>
-                <textarea name="content" id="content">改行区切りで入力
-                </textarea>
+                <textarea name="words" id="content" required><%= @proj['words'] %></textarea>
                 <small>プレビュー</small>
                 <div id="preview-area" class="preview">
 

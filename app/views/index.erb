@@ -5,10 +5,12 @@
   if (news['img']==''||news['img']==nil)
     is_noimg = 'none'
     news['img'] = '/img/TMCIT_LOGO_REV.png'
-  end  
+  end 
+  is_show_newmark = ''
+  is_show_newmark = ((Time.now - news['notify_time'])<(15*60)) ? 'new' : '' 
 news_str += "<div class=\"thum-one-container pointer\">"\
             + "<a href=\"/news/detail?id=#{news['id']}\">"\
-              + "<div class=\"thum-one new\">"\
+              + "<div class=\"thum-one #{is_show_newmark}\">"\
                 + "<div class=\"thum-one-icon #{is_noimg} pointer\">"\
                   + "<img src=\"#{news['img']}\" class=\"\">"\
                 + "</div>"\

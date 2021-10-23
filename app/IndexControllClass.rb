@@ -32,6 +32,7 @@ class IndexControllClass < UserControllClass
             row['title'] = news['title']
             row['summary'] = news['description']
             row['date']    = notify_datetime.strftime("%m/%d %H:%M %a")
+            row['notify_time'] = notify_datetime
             @news_ary.push(row)
             news_cnt+=1
         }   

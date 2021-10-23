@@ -69,6 +69,51 @@ class AdminControllClass < QRControllClass
         return true
     end
 
+    #==========================IMAGE=================================
+    post '/kousenadmin/common/update/add/img' do
+      # Check Admin User
+      checkAdminToken('/kousenadmin/logout')        
+      proj_p = session[:permit_proj].to_i
+      news_p = session[:permit_news].to_i
+      return "ERROR000" if proj_p!=1||news_p!=1
+
+      puts Time.now.to_s + "POST IMAGES"
+      if params[:file]==nil;   return "ERROR001";  end
+  
+      uuid0  = SecureRandom.uuid 
+      uuid1  = SecureRandom.uuid 
+      ext    = File.extname(params[:file][:filename]) 
+      fpath0 = "/tmp/"           + uuid0+  ext    
+      fpath1 = "/tmp/"           + uuid1 + ".jpg" 
+      fpath2 = "../html/kouhou_images/" + uuid1 + ".jpg" 
+      upath  = "/kouhou_images/"        + uuid1 + ".jpg" 
+      
+      begin 
+        File.open(fpath0, 'wb'){ |f|  f.write( params[:file][:tempfile].read ) }
+      rescue => error
+        puts "POST: /kouhou_add_data_admin_img on error "; puts error; puts ""
+        return "ERROR002"
+      end
+  
+      `convert -auto-orient #{fpath0} -strip -resize '1024x>' #{fpath1}`
+      md5 = `md5sum #{fpath1}`.split(" ")[0];
+      
+      a = `ls -t ../html/kouhou_images/*.jpg`.split
+      a.each{|f|
+        tmp = `md5sum #{f}`.split(" ")[0];
+        if md5==tmp   
+          puts "MATCH!!!!"
+          `rm #{fpath1}`
+          upath = "/kouhou_images/"+File.basename(f)
+          return upath                       
+          end
+      }
+      
+      `mv #{fpath1} #{fpath2}`
+      return upath   
+    end
+
+    #==========================LOGIN=================================
     get '/kousen/admin/0AEECC00-4D5E-5043-E97C-2CBF5A8B2356/STN/login' do
         erb :admin_login
     end
@@ -191,6 +236,7 @@ class AdminControllClass < QRControllClass
 
       ena_ids = params['enable'] ||=''
       
+      #
       return "PARAMS DONT HAVE ANT DATA" if ena_ids==''
 
       sql = 'select id from kouhou.news where del_flg=0;'
@@ -235,7 +281,7 @@ class AdminControllClass < QRControllClass
       @news['ddesc'] = row['detail_desc']
       @news['date'] = Time.parse(row['notify_datetime'].to_s)
       @news['path'] = row['image_path']
-
+      p @news
       erb :admin_news_edit
     end
 
@@ -258,14 +304,15 @@ class AdminControllClass < QRControllClass
       desc  = params['description'] ||=''
       ddesc = params['detail_desc'] ||=''
       date  = params['notify_datetime'] ||=''
+      path  = params['image_path'] ||= 'NOIMAGE'
 
       return "NEED ARGS : ANY" if(title==''||dtitle==''||desc==''||ddesc==''||date==''||id=='')
       return "TOO LONG DATA : ANY" if(title.size>60)
 
       notify_time = Time.parse(date)
       
-      sql = 'update kouhou.news set title=?,detail_title=?,description=?,detail_desc=?,notify_datetime=? where id=?;'
-      execSql(sql, title, dtitle, desc, ddesc, date, id);
+      sql = 'update kouhou.news set title=?,detail_title=?,description=?,detail_desc=?,notify_datetime=?,image_path=? where id=?;'
+      execSql(sql, title, dtitle, desc, ddesc, date, path,  id);
       redirect to('/kousenadmin/news/dashboard')
     end
 
@@ -304,4 +351,238 @@ class AdminControllClass < QRControllClass
       redirect to('/kousenadmin/news/dashboard')
     end
     #=============================END : NEWS=====================================
+
+    #===========================START : PROJ=====================================
+    get '/kousenadmin/proj/dashboard' do 
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      sql = 'select * from kouhou.proj where del_flg=0;'
+      res = execSql(sql)
+      sql = 'select * from kouhou.cates where del_flg=0 and ena_flg=1;'
+      catedb = execSql(sql)
+      sql = 'select * from kouhou.locate where del_flg=0 and ena_flg=1;'
+      locatedb = execSql(sql)
+      res=[] if res==nil
+      catedb=[] if catedb==nil
+      locatedb=[] if locatedb==nil
+
+      cates = {}
+      catedb.each{ |cate|
+        cates[cate['id']] = cate['cate']
+      }
+
+      locates = {}
+      locatedb.each{ |locate|
+        locates[locate['id']] = locate['locate_name']
+      }
+
+      @proj_list = []
+      res.each { |row|
+        h = {}
+        h['cate'] = cates[row['cate']]
+        h['id'] = row['id']
+        h['organizer'] = row['organizer']
+        h['title'] = row['title']
+        h['located'] = locates[row['located']]
+        h['ena'] = row['ena_flg']
+        @proj_list.push(h)
+      }
+
+      erb :admin_proj_list
+    end
+
+    post '/kousenadmin/proj/update/showing_list' do
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      ena_ids = params['enable'] ||=''
+      
+      #return "PARAMS DONT HAVE ANT DATA" if ena_ids==''
+
+      sql = 'select id from kouhou.proj where del_flg=0;'
+      res = execSql(sql)
+      
+      return "DB DONT HAS ANY DATA" if(res.count<1)
+      # return "PARAMS WAS BROKEN"    if(res.count!=ena_ids.count)
+
+      sql = 'update kouhou.proj set ena_flg=? where del_flg=0 and id=?;'    
+      
+      res.each{ |row|
+        
+        if ena_ids.include?(row['id'].to_s)
+          execSql(sql, 1, row['id'])
+        else
+          execSql(sql, 0, row['id'])
+        end
+      }
+
+      redirect to('/kousenadmin/proj/dashboard')  
+    end 
+
+    get '/kousenadmin/proj/update/edit' do
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      id = params['id'] ||=''
+      return "NEED ARGS : PROJ ID" if id==''
+
+      sql = 'select * from kouhou.proj where del_flg=0 and id=?;'
+      res = execSql(sql, id)
+      return "DB IS BROKEN" if res.count!=1
+
+      row = res.first
+      @proj = {}
+      @proj['id'] = row['id']
+      @proj['title'] = row['title']
+      @proj['icon'] = row['icon_path']
+      @proj['image'] = row['image_path']
+      @proj['cate'] = row['cate']
+      @proj['desc'] = row['description']
+      @proj['sub_desc'] = row['sub_description']
+      @proj['tags'] = row['tags']
+      @proj['words'] = row['words']
+      @proj['organizer'] = row['organizer']
+      @proj['located'] = row['located']
+
+      sql = 'select * from kouhou.cates where del_flg=0 and ena_flg=1;'
+      catedb = execSql(sql)
+      catedb=[] if catedb==nil
+      @cates = {}
+      catedb.each{ |cate|
+        @cates[cate['id']] = cate['cate']
+      }
+
+      sql = 'select * from kouhou.locate where del_flg=0 and ena_flg=1;'
+      locatedb = execSql(sql)
+      locatedb = [] if locatedb==nil
+      @locates = {}
+      locatedb.each{ |locate|
+        @locates[locate['id']] = locate['locate_name']
+      }
+
+      erb :admin_proj_edit
+    end
+
+    post '/kousenadmin/proj/update/edit' do
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      id = params['id'] ||=''
+      title = params['title'] ||=''
+      organizer = params['organizer'] ||=''
+      cate = params['cate'] ||=''
+      located = params['located'] ||=''
+      desc = params['description'] ||=''
+      sub_desc = params['sub_description'] ||=''
+      tags = params['tags'] ||=''
+      words = params['words'] ||=''
+      image_path = params['image_path'] ||='NOIMAGE'
+      icon_path = params['icon_path'] ||='NOIMAGE'
+
+      if tags!=''
+        tags = tags.split('\n')
+      else
+        tags = ["NOTAGS"]
+      end
+
+      if words!=''
+        words = words.split('\n')
+      else
+        words = ["NOWORDS"]
+      end
+
+      tags  = tags.join(',')
+      words = words.join(',')
+
+      return "ERROR: NEED TO ARGS" if id==''||title==''||organizer==''||cate==''||sub_desc==''||located==''
+
+      sql = 'update kouhou.proj set title=?, organizer=?, located=?, cate=?, description=?, sub_description=?, tags=?, words=?, image_path=?, icon_path=? where del_flg=0 and id=?;'
+      # sql  = 'insert into proj (title, organizer, located, cate, description, sub_description, tags, words, image_path, icon_path)'
+      # sql += 'values (?,?,?,?,?,?,?,?,?,?) where id=?'
+      execSql(sql, title, organizer, located, cate, desc, sub_desc, tags, words, image_path, icon_path, id);
+      redirect to('/kousenadmin/proj/dashboard')
+    end
+
+    get '/kousenadmin/proj/update/add' do 
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+      sql = 'select * from kouhou.cates where del_flg=0 and ena_flg=1;'
+      catedb = execSql(sql)
+      catedb=[] if catedb==nil
+      @cates = {}
+      catedb.each{ |cate|
+        @cates[cate['id']] = cate['cate']
+      }
+
+      sql = 'select * from kouhou.locate where del_flg=0 and ena_flg=1;'
+      locatedb = execSql(sql)
+      locatedb = [] if locatedb==nil
+      @locates = {}
+      locatedb.each{ |locate|
+        @locates[locate['id']] = locate['locate_name']
+      }
+
+      @token = SecureRandom.uuid
+      erb :admin_proj_add
+    end
+
+    post '/kousenadmin/proj/update/add' do
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      title = params['title'] ||=''
+      organizer = params['organizer'] ||=''
+      cate = params['cate'] ||=''
+      located = params['located'] ||=''
+      desc = params['description'] ||=''
+      sub_desc = params['sub_description'] ||=''
+      tags = params['tags'] ||=''
+      words = params['words'] ||=''
+      image_path = params['image_path'] ||='NOIMAGE'
+      icon_path = params['icon_path'] ||='NOIMAGE'
+
+      if tags!=''
+        tags = tags.split('\n')
+      else
+        tags = ["NOTAGS"]
+      end
+
+      if words!=''
+        words = words.split('\n')
+      else
+        words = ["NOWORDS"]
+      end
+
+      tags  = tags.join(',')
+      words = words.join(',')
+
+      return "ERROR: NEED TO ARGS" if title==''||organizer==''||cate==''||sub_desc==''||located==''
+
+      sql  = 'insert into proj (title, organizer, located, cate, description, sub_description, tags, words, image_path, icon_path)'
+      sql += 'values (?,?,?,?,?,?,?,?,?,?);'
+      execSql(sql, title, organizer, located, cate, desc, sub_desc, tags, words, image_path, icon_path);
+      redirect to('/kousenadmin/proj/dashboard')
+    end
+
+    get '/kousenadmin/proj/update/delete' do
+      checkAdminToken('/kousenadmin/logout')
+      permit = session[:permit_proj]
+      return "Permission denied : YOU CANT CONTROL PROJS" if permit!=1
+
+      id = params['id'] ||=''
+      return "NEED ARG" if id==''
+
+      sql = 'update kouhou.proj set del_flg=1 where id=?;'
+      execSql(sql, id)
+      redirect to('/kousenadmin/proj/dashboard')
+    end
+
+    #=============================END : PROJ=====================================
 end

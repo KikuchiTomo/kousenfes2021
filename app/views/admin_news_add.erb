@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/css/admin_news_edit.css">
     <link rel="stylesheet" href="/css/style.css">    
+    <script src="/js/image_upload.js"></script>    
 </head>
 
 <body>
@@ -31,8 +32,13 @@
         <div class="main-container">
             <small>タイトル画像</small>
             <div>
-                <input type="file" name="img" id="img">
-            </div>
+                <div style="height:5px; width: 180px; background: #f5c4c4;">
+                    <div style="height: 5px; background: lightgreen;" id="image-prog"></div>
+                </div>
+                <img id="preview-area-image" src="/img/TMCIT_LOGO_REV_M.png" style="height:180px; width: 180px; object-fit: contain;">
+                <input type="file" id="image-picker">
+                <input type="hidden" name="image_path" id="image-pics" value="">
+            </div>            
             <small>お知らせタイトル(TOPページに表示)</small>
             <input type="text" name="title" maxlength="30" placeholder="例：ビンゴ大会まもなく開始">
             <small>お知らせ内容タイトル(詳細画面に表示)</small>
@@ -69,6 +75,13 @@
                 var html = marked(document.getElementById('content').value);
                 view.innerHTML = html;
             })
+
+            var image_ajax = new ajaxImageController({
+                img_input: "image-picker",
+                view_area: "preview-area-image",
+                prog_area: "image-prog",
+                img_src_input: "image-pics"
+            });    
         }
     </script>
     </body>
