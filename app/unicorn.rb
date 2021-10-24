@@ -6,6 +6,5 @@ timeout 20
 listen 8080
 
 pid         "#{dir}/../pids/unicorn.pid"
-
 stderr_path "#{dir}/../log/unicorn.stderr.log"
 stdout_path "#{dir}/../log/unicorn.stdout.log"

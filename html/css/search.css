@@ -118,6 +118,9 @@
     opacity: 1;
 }
 
+.select-container label select{
+    color: #2e2e2e;
+}
 /* menu - style */
 @keyframes open-menu{
     0%{
@@ -409,7 +412,17 @@ div.skills-content{
 footer{
     transform: translate3d(0,0,0);     
     padding: 8vh;
+    width: 100%;
     background: white;    
+    position: absolute;
+    bottom: 0; 
+}
+
+.footer-container{
+    min-height: 200px;
+    position: relative;
+    padding-bottom: 120px;
+    box-sizing: border-box;
 }
 
 .copyright{
@@ -536,7 +549,7 @@ div.info-content::-webkit-scrollbar{
     position: absolute;
     z-index: 1000;
     height: 40px;
-    width: 202px;
+    width: 140px;
     cursor: pointer;
     transform: translate3d(0,0,0);
     background: white;
@@ -552,8 +565,49 @@ div.info-content::-webkit-scrollbar{
     position: absolute;
     top: 70px;
     line-height: 40px;
+    color: #2e2e2e;
     height: 40px;
-    left: 190px;
+    left: 130px;
+    padding: 0px 10px;
+    font-size: 12px;
+    content: '▼';
+    background: white;
+    border-radius: 0 4px 4px 0;
+    pointer-events: none;
+    z-index: 1001;
+    border: 0.5px solid #053c69;
+    border-left: none;    
+}
+.search-form .select-container2 select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    word-break: normal;
+    top: 70px;
+    left: 165px;
+    position: absolute;
+    z-index: 1000;
+    height: 40px;
+    width: 140px;
+    cursor: pointer;
+    transform: translate3d(0,0,0);
+    background: white;
+    color: #2e2e2e;
+    font-weight: lighter;
+    font-size: 11px;
+    padding: 12px;
+    border: 0.5px solid #053c69;
+    border-radius: 4px;
+    border-right: none;    
+}
+
+.search-form .select-container2:after{
+    position: absolute;
+    top: 70px;
+    line-height: 40px;
+    color: #2e2e2e;
+    height: 40px;
+    left: 272px;
     padding: 0px 10px;
     font-size: 12px;
     content: '▼';
@@ -581,6 +635,20 @@ div.info-content::-webkit-scrollbar{
     border-color: #053c69;
 	border-right: none;
     background: white;
+    color: #2e2e2e;
+}
+
+.nohit{
+    height: 60%;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 20vh auto;
+}
+.info-title{
+    margin: 0 5vw;  
 }
 
 .search-form .search-win input[type=submit]:hover {

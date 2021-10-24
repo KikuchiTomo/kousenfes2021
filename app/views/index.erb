@@ -2,7 +2,7 @@
   news_str = ''
   @news_ary.each { |news|
   is_noimg = ''
-  if (news['img']==''||news['img']==nil)
+  if (news['img']==''||news['img']==nil||news['img']=="NOIMAGE")
     is_noimg = 'none'
     news['img'] = '/img/TMCIT_LOGO_REV.png'
   end 
@@ -21,6 +21,33 @@ news_str += "<div class=\"thum-one-container pointer\">"\
               + "</div>"\
             + "</a>"\
           +"</div>"
+  }
+
+  proj_str=''
+  @proj_ary.each{ |proj|
+    is_noimg = ''
+    if(proj['img']==''||proj['img']==nil||proj['img']=="NOIMAGE")
+      is_noimg = 'none'
+      proj['img'] = '/img/TMCIT_LOGO_REV.png'
+    end
+    is_show_newmark = ''
+    p proj
+    is_show_newmark = ((Time.now - proj['time'])<(30*60)) ? 'new' : ''
+    proj_str += "<div class=\"thum-one-container\">"\
+          +"<a href=\"/proj/detail?id=#{proj['id']}\">"\
+            +"<div class=\"thum-one #{is_show_newmark}\">"\
+              +"<div class=\"thum-one-icon #{is_noimg}\">"\
+                +"<img src=\"#{proj['img']}\" class=\"\">"\
+              +"</div>"\
+              +"<div class=\"thum-one-context\">"\
+                +"<h4 class=\"white\"><span style=\"color: white; background: #0A62A9; padding: 2px 4px 3px 4px;border-radius: 2px;\">#{proj['cate']}</span>　#{proj['title']}</h4>"\
+                +"<p class=\"white\"><small>#{proj['org']}</small><br>#{proj['desc']}"\
+                +"</p>"\
+              +"</div>"\
+            +"</div>"\
+          +"</a>"\
+        +"</div>"
+
   }
 %>
 
@@ -52,7 +79,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
 
 <body id="body" class="scroll-bar scroll-bar-width">
   <div class="loading" id="loading">
-    <img src="favicon.ico">
+    <img src="/img/TMCIT_LOGO_REV_M.png">
   </div>
   <section id="top" class="index-top">
     <div class="top-background-img" id="top-backing">
@@ -63,7 +90,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         <div class="top-img-container">
           <!-- <div class="top-img top01" ></div> -->
           <!-- <div class="top-img top02" ></div> -->
-          <img class="top-img" src="img/TOP_SG01.png" alt="技術と技能の調和 高専生による熱血の祭り">
+          <img class="top-img" src="img/TOP57LEFT_LIGHT.png" alt="技術と技能の調和 高専生による熱血の祭り">
           <img class="top-img" src="img/TOP_SG11.png" alt="技術と技能の調和 高専生による熱血の祭り">
         </div>
       </div>
@@ -96,7 +123,11 @@ news_str += "<div class=\"thum-one-container pointer\">"\
       <div class="news-col flex-divs scroll-bar scroll-bar-height">
       
         <%= news_str %>
-       
+        <div class="thum-one-container list_link">
+          <a href="/news">
+            もっと見る
+          </a>
+        </div>
       </div>
     </div>
     <a href="news" class="news-link">一覧を表示</a>
@@ -109,99 +140,20 @@ news_str += "<div class=\"thum-one-container pointer\">"\
     </div>
     <div class="proj-content">
       <div class="news-col flex-divs scroll-bar scroll-bar-height">
+
         <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
+        <%= proj_str %>
+
+        <div class="thum-one-container list_link white">
+          <a href="/search">
+            もっと見る 
           </a>
         </div>
         <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
-        <!-- Begin news one content -->
-        <div class="thum-one-container">
-          <a href="proj?id=1">
-            <div class="thum-one new">
-              <div class="thum-one-icon none">
-                <img src="img/TMCIT_LOGO_REV_M.png" class="">
-              </div>
-              <div class="thum-one-context">
-                <h4 class="white">Thum Title</h4>
-                <p class="white"></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- End news one content -->
+        
       </div>
     </div>
-    <a href="proj" class="proj-link">一覧を表示</a>
+    <a href="/search" class="proj-link">一覧を表示</a>
   </section>
   <section class="index-info">
     <div class="info-title">

@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/css/admin_proj_edit.css">
-    <link rel="stylesheet" href="/css/style.css">    
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/image_upload.js"></script>    
 </head>
 
 <body>
@@ -30,13 +31,21 @@
             <div class="main-container">
                 <small>ICON画像</small>
                 <div>
-                    <input type="file" name="img" id="img">
-                    <input type="hidden" name="icon_path" value="<%= @proj['icon'] %>">
+                 <div style="height:5px; width: 180px; background: #f5c4c4;">
+                        <div style="height: 5px; background: lightgreen;" id="icon-prog"></div>
+                    </div>
+                    <img id="preview-area-icon" src="<%= (@proj['icon']=="NOIMAGE") ? "/img/TMCIT_LOGO_REV_M.png" : @proj['icon'] %>" style="height:180px; width: 180px; object-fit: contain;">
+                    <input type="file" id="icon-picker">                    
+                    <input type="hidden" name="icon_path" id="icon-pics" value="<%= @proj['icon'] %>">
                 </div>
                 <small>ヘッダー画像</small>
                 <div>
-                    <input type="file" name="img" id="img">
-                    <input type="hidden" name="image_path" value="<%= @proj['image'] %>">
+                    <div style="height:5px; width: 180px; background: #f5c4c4;">
+                        <div style="height: 5px; background: lightgreen;" id="image-prog"></div>
+                    </div>
+                    <img id="preview-area-image" src="<%= (@proj['image']=="NOIMAGE") ? "/img/TMCIT_LOGO_REV_M.png" : @proj['image'] %>" style="height:180px; width: 180px; object-fit: contain;">
+                    <input type="file" id="image-picker">
+                    <input type="hidden" name="image_path" id="image-pics" value="<%= @proj['image'] %>">
                 </div>
                 <input type="hidden" name="id" value="<%= @proj['id'] %>" required>
                 <small>企画タイトル</small>
@@ -88,6 +97,20 @@
                 var html = marked(document.getElementById('content').value);
                 view.innerHTML = html;
             })
+
+              var icon_ajax = new ajaxImageController({
+                img_input: "icon-picker",
+                view_area: "preview-area-icon",
+                prog_area: "icon-prog",
+                img_src_input: "icon-pics"
+            });
+
+            var image_ajax = new ajaxImageController({
+                img_input: "image-picker",
+                view_area: "preview-area-image",
+                prog_area: "image-prog",
+                img_src_input: "image-pics"
+            });        
         }
     </script>
     </div>

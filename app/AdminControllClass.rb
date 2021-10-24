@@ -312,7 +312,7 @@ class AdminControllClass < QRControllClass
       notify_time = Time.parse(date)
       
       sql = 'update kouhou.news set title=?,detail_title=?,description=?,detail_desc=?,notify_datetime=?,image_path=? where id=?;'
-      execSql(sql, title, dtitle, desc, ddesc, date, path,  id);
+      execSql(sql, title, dtitle, desc, "\r\n" + ddesc, date, path,  id);
       redirect to('/kousenadmin/news/dashboard')
     end
 
@@ -347,7 +347,7 @@ class AdminControllClass < QRControllClass
       notify_time = Time.parse(date)
       
       sql = 'insert into kouhou.news (title,detail_title,description,detail_desc,notify_datetime,image_path) values (?,?,?,?,?,?);'
-      execSql(sql, title, dtitle, desc, ddesc, date, img);
+      execSql(sql, title, dtitle, desc, "\r\n" + ddesc, date, img);
       redirect to('/kousenadmin/news/dashboard')
     end
     #=============================END : NEWS=====================================
@@ -504,7 +504,7 @@ class AdminControllClass < QRControllClass
       sql = 'update kouhou.proj set title=?, organizer=?, located=?, cate=?, description=?, sub_description=?, tags=?, words=?, image_path=?, icon_path=? where del_flg=0 and id=?;'
       # sql  = 'insert into proj (title, organizer, located, cate, description, sub_description, tags, words, image_path, icon_path)'
       # sql += 'values (?,?,?,?,?,?,?,?,?,?) where id=?'
-      execSql(sql, title, organizer, located, cate, desc, sub_desc, tags, words, image_path, icon_path, id);
+      execSql(sql, title, organizer, located, cate, "\r\n" + desc, sub_desc, tags, words, image_path, icon_path, id);
       redirect to('/kousenadmin/proj/dashboard')
     end
 
@@ -567,7 +567,7 @@ class AdminControllClass < QRControllClass
 
       sql  = 'insert into proj (title, organizer, located, cate, description, sub_description, tags, words, image_path, icon_path)'
       sql += 'values (?,?,?,?,?,?,?,?,?,?);'
-      execSql(sql, title, organizer, located, cate, desc, sub_desc, tags, words, image_path, icon_path);
+      execSql(sql, title, organizer, located, cate, "\r\n" + desc, sub_desc, tags, words, image_path, icon_path);
       redirect to('/kousenadmin/proj/dashboard')
     end
 

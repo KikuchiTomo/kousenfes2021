@@ -511,7 +511,7 @@ div.proj-content::-webkit-scrollbar{
 }
 
 .thum-one-container{
-    min-width: 250px;
+    min-width: 300px;
 }
 
 .thum-one{
@@ -774,10 +774,29 @@ img.top-img{
     transform: translate3d(0,0,0); 
 }
 
+.thum-one {
+    cursor: pointer;
+}
 .pointer{
     cursor: pointer;
 }
 
+.list_link a {
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    color: #2e2e2e;
+    text-align: center;
+    line-height: 200px;
+}
+
+div.list_link{
+    height: 200px !important;
+    width: 200px !important;
+}
+.list_link.white a{
+    color: white;
+}
 
 /* for tablet */
 @media screen and (min-width: 480px) {

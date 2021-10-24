@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja" id="html">
   <head>
-    <!--　覗いた人への言い訳: 結合テストも単体テストしてないので，バックエンド側にバグあるかもしれないけど，一応セキュリティの対策はしてます -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
-    <title><%= @error_title %> - 第53回 高専祭</title>
-    <link rel="shortcut icon" href="http://153.126.131.201/favicon.ico">
+    <title>企画詳細ページ :  - 第53回 高専祭</title>
+    <link rel="shortcut icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/error.css">
-    <script src="/js/scroll_change_color.js"></script>
+    <link rel="stylesheet" href="/css/document.css">
+    <script src="js/scroll_change_color.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script>
       function closeMenu(){
@@ -22,7 +21,7 @@
       }
     </script>
   </head>
-  <body id="body">
+  <body id="body" class="scroll-bar scroll-bar-width">
     <div class="loading" id="loading">
       <img src="/img/TMCIT_LOGO_REV_M.png">
     </div>
@@ -53,17 +52,39 @@
     </section>
     
     <section class="index-info">
+      <div clas="top-header-image">
+        <img src="/img/TMCIT_LOGO_REV_M_HEADER.png" id="header">        
+      </div>
       <div id="user-container" class="user">
-        <h1 class="error-title"><%= @error_title %></h1>
-        <p class="error-desc"><%= @error_desc %></p>
+        <h1 class="title">Error Name</h1>
+        <div class="proj">
+          <span class="pcon">
+            <span class="ptitle">種　類</span>
+            <span class="space"></span>            
+            <span class="cate">オンライン</span>            
+          </span><br>
+          <span class="pcon">
+            <span class="ptitle">企画者</span>
+            <span class="space"></span>            
+            <span class="cate">民謡研究部</span>            
+          </span><br>
+          <span class="pcon">
+            <span class="ptitle">場　所</span>
+            <span class="space"></span>  
+            <a href="/search?floor=2" class="no-space">          
+            <span class="cate-f">2 階</span>                    
+            <span class="cate-b">材料力学実験室</span>            
+            </a>            
+          </span>
+
+        </div> 
+        <p class="desc">Error Description</p>
       </div>
      
-      <div class="error-show">
+      <div class="show">
         <p>
-          ご不便をかけまして申し訳ありません．<br>
-          時間をおいてからアクセスをお願いいたします．<br>
-          システム管理者へ<a href="https://docs.google.com/forms/d/e/1FAIpQLScUdvHRpl3yCUlBOkbA3yVFoS79nrCiL0_owiUpbx4-87g5jw/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer">こちらから</a>ご連絡下さい<br>
-          <a href="#" class="back-link" onclick="history.back(-1);return false;">戻る</a>
+
+          <a href="#" onclick="history.back(-1);return false;" class="back-link">戻る</a>          
         </p>
       </div>
     </section>
