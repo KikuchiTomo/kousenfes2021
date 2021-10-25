@@ -275,15 +275,19 @@ table{
 table tr td div{
     font-family: 'Noto Sans JP', sans-serif;
     margin: 1px;
-    height: 15vw;
+    height: 8vw;
   /*   max-height: 120px;
     max-width: 120px; */
-    width: 15vw;
-    line-height: 15vw;
+    width: 8vw;
+    line-height: 8vw;
     text-align: center;
-    border-radius: 15vw;
+    border-radius: 8vw;
     background: white;
-    cursor: pointer;    
+    cursor: pointer;
+    margin-right:2vw;
+    margin-left:2vw;
+    margin-bottom:2vw;
+    margin-top:2vw;    
 }
 
 table tr td div:hover{

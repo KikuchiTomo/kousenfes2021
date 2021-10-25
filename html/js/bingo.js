@@ -1,5 +1,5 @@
 async function isopen(){
-    let response = await fetch("");
+    let response = await fetch("https:kousensai.jp/bingo/numbers");
     if(response.ok){
         let json_click = await response.json();
         return json_click
@@ -18,8 +18,8 @@ async function click(props){
     console.log(table)
     let elm = document.getElementById(props.whr)
     console.log(elm)
-//    bingo_click = await isopen()    
-    bingo_click = {"bingo_id":"001","status":"1","isOpen":[[3],[2],[50]]}
+    bingo_click = await isopen()    
+//    bingo_click = {"bingo_id":"001","status":"1","isOpen":[[3],[2],[50]]}
     flag = 0
     for(let i =0 ; i<bingo_click.isOpen.length ; i++){
         if(JSON.stringify(props.num)==JSON.stringify(bingo_click.isOpen[i])){
@@ -75,7 +75,7 @@ function bingoSheet(BingoData){
 }
 
 async function getBingoDataFromServer(){
-    let response = await fetch('https://kousenfes.tokyo/bingo_data_get');
+    let response = await fetch('https://kousensai.jp/bingo/play');
     if (response.ok) { // HTTP ステータスが 200-299 の場合
         // レスポンスの本文を取得(後述)
         let json = await response.json();
@@ -89,8 +89,8 @@ async function getBingoDataFromServer(){
 
 async function execBingo(config){       //最初に呼び出す関数
     this.id = config.id || "none"
-    bingo_data={"bingo_id":"001","num":[[[1],[2],[50],[3],[4]],[[5],[6],[7],[8],[9]],[[10],[11],[12],[13],[14]],[[15],[16],[17],[18],[19]],[[20],[21],[22],[23],[24]]],"isOpen":[[[1],[1],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]]}     //kari
-//    bingo_data = await getBingoDataFromServer();
+//    bingo_data={"bingo_id":"001","num":[[[1],[2],[50],[3],[4]],[[5],[6],[7],[8],[9]],[[10],[11],[12],[13],[14]],[[15],[16],[17],[18],[19]],[[20],[21],[22],[23],[24]]],"isOpen":[[[1],[1],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]]}     //kari
+    bingo_data = await getBingoDataFromServer();
     console.log(bingo_data)
     console.log(bingo_data.bingo_id)    
 
