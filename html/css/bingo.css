@@ -159,6 +159,10 @@ nav.menu-container{
     width: 100vw;
 }
 
+.space{
+    height: 75px;
+    width: 20%;
+}
 
 .menu-container a{
     transition: 0.2s;    
@@ -249,13 +253,23 @@ section.index-info{
     transform: translate3d(0,0,0);         
 }
 
+.video iframe{
+    display: block;
+    height:27vw;
+    width:48vw;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
 div#bingo-container{
     z-index: 999;
-    color: white;
+    color: black;
 }
 
 table{
-    margin: auto;
+    background:gold;
+    margin-right:auto;
+    margin-left:auto;
 }
 
 table tr td div{
@@ -268,14 +282,20 @@ table tr td div{
     line-height: 15vw;
     text-align: center;
     border-radius: 15vw;
-    background: #0A62A9;
+    background: white;
     cursor: pointer;    
 }
 
-table tr td div[data-is-open="true"]{
+table tr td div:hover{
+    transition:1s;
+    color:white;
+    background:black;
+}
+
+table tr td div[data-is-open="0"]{
     box-shadow:0px 0px 8px 3px black inset;
-    background: white;
-    color: #2e2e2e;
+    background: black;
+    color: blue;
     transition: 0.3s;
 }
 
