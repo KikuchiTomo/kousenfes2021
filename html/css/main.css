@@ -325,6 +325,10 @@ div.news-content::-webkit-scrollbar{
     transform: rotate(45deg) translateX(8px);
 }
 
+a{
+    cursor: pointer;
+}
+
 .news-col{
     overflow-x: scroll;
 }

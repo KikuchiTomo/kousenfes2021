@@ -554,6 +554,7 @@ class AdminControllClass < QRControllClass
         tags = ["NOTAGS"]
       end
 
+      
       if words!=''
         words = words.split('\n')
       else

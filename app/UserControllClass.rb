@@ -443,4 +443,28 @@ class UserControllClass < DBControllClass
     redirect '/kousenuser/login'
     return true
   end
+
+  get '/kousenuser/reset' do
+    erb :user_reset
+  end
+
+  post '/kousenuser/STN/reset' do
+    email = params['RSTxxOHCE'] ||=''
+    mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+    if email==nil || email=='' || !email.match? mailRegex
+      raise CommonErrorView, "形式エラー-形式が不正です"
+      return false
+    end
+
+    sql = 'select uuid from kouhou.users where email=?;'
+    res = execSql(sql, email)
+    
+    if res.count!=1
+      raise CommonErrorView, "不正ユーザ-ユーザは存在しません"
+      return false
+    end
+
+
+    return false
+  end
 end

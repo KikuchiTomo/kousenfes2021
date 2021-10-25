@@ -168,6 +168,7 @@ nav.menu-container{
     color: #2e2e2e;
     font-size: 1.0em;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .menu-container a.current-page{
@@ -226,7 +227,7 @@ div.top-background{
     z-index: 1;
     background: #0A62A9;
     height: 100px;
-    width: 100vw;
+   /* width: 100vw;*/
 }
 
 div.top-content{
