@@ -58,8 +58,8 @@ news_str += "<div class=\"thum-one-container pointer\">"\
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta charset="utf-8">
   <meta name="description"
-    content="第五十四回 都立産業技術高専荒川キャンパス高専祭の公式ホームページです．このサイトでは，更新情報や企画検索，その他委員会企画への参加申し込み，学校説明会などの情報を掲載しています">
-  <title>第53回 高専祭 - 産業技術高専</title>
+    content="第五十七回 都立産業技術高専荒川キャンパス高専祭の公式ホームページです．このサイトでは，更新情報や企画検索，その他委員会企画への参加申し込み，学校説明会などの情報を掲載しています">
+  <title>第57回 高専祭 - 産業技術高専</title>
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,7 +68,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/main.css">
-  <script src="js/scroll_change_color.js"></script>
+  <script src="/js/scroll_change_color.js"></script>
   <script>
     function closeMenu() {
       let menu_elem = document.getElementById('menu-ham');
@@ -164,7 +164,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
       <div class="info-container">
 
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/annai.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -179,8 +179,24 @@ news_str += "<div class=\"thum-one-container pointer\">"\
           </div>
         </a>
         <!-- End info one content -->
+         <!-- Begin info one content -->
+        <a href="/publish_kousen/aisatu_koutyousensei.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">校長先生のご挨拶</h4>
+              <p>
+                <small class="white">
+                  本学の校長先生によるご挨拶です。
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/setumeikai.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -196,7 +212,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         </a>
         <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/covid19.html">
           <div class="thum-simple-one">
             <div class="thum-simple-one-img">
               <img src="img/005.jpg">
@@ -213,7 +229,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         </a>
         <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="time_table">
+        <a href="/publish_kousen/time_table.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -229,7 +245,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         </a>
         <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/site_policy.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -245,7 +261,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         </a>
         <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/tyuui.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -261,7 +277,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
         </a>
         <!-- End info one content -->
         <!-- Begin info one content -->
-        <a href="info_session.html">
+        <a href="/publish_kousen/miraikoubou.html">
           <div class="thum-simple-one none">
             <div class="thum-simple-one-img">
             </div>
@@ -306,6 +322,7 @@ news_str += "<div class=\"thum-one-container pointer\">"\
       observe_target = document.body;
       ani.classList.add("can-animation")
     } else if (userAgent.indexOf('firefox') != -1) {
+      alert("Google Chrome推奨です。デザインが崩れる可能性があります。"); 
       observe_target = document.documentElement;
       ani.classList.add("can-animation")
     } else if (userAgent.indexOf('opera') != -1) {
