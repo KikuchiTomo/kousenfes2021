@@ -19,8 +19,8 @@ async function click(props){
     let elm = document.getElementById(props.whr)
     console.log(elm)
     bingo_click = await isopen()    
-//    bingo_click = "{\"status\":\"1\",\"isOpen\":[[3],[2],[50]]}"
-    bingo_click=JSON.parse(bingo_click)
+    bingo_click = "{\"status\":\"1\",\"isOpen\":[[3],[2],[50]]}"
+//    bingo_click=JSON.parse(bingo_click)
 
     flag = 0
     for(let i =0 ; i<bingo_click.isOpen.length ; i++){
@@ -78,7 +78,7 @@ function bingoSheet(BingoData){
 
 async function getBingoDataFromServer(){
     console.log("getBingoDataFromSever")
-    let response = await fetch('https://kousensai.jp/bingo/play');
+    await fetch('https://kousensai.jp/bingo/play').then((response)=> {  
     if (response.ok) { // HTTP ステータスが 200-299 の場合
         // レスポンスの本文を取得(後述)
         let json = await response.json();
@@ -88,13 +88,14 @@ async function getBingoDataFromServer(){
         alert("通信に失敗しました ERROR: " + response.status);
         return null;
       }
+    })
 }
 
 async function execBingo(config){       //最初に呼び出す関数
     this.id = config.id || "none"
     bingo_data={"num":[[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]],"isOpen":[[[1],[1],[1],[1],[1]],[[1],[1],[1],[1],[1]],[[1],[1],[1],[1],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]]}     //kari
-    bingo_json = await getBingoDataFromServer();
-//    bingo_json="{\"num\": [[12,15,1,2,3],[27,23,17,30,28],[34,35,0,43,44],[53,58,49,57,60],[67,63,65,61,75]]}"
+//    bingo_json = await getBingoDataFromServer();
+    bingo_json="{\"num\": [[12,15,1,2,3],[27,23,17,30,28],[34,35,0,43,44],[53,58,49,57,60],[67,63,65,61,75]]}"
     console.log(bingo_json)
     bingo_json = JSON.parse(bingo_json).num  
 
