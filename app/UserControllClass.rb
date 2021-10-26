@@ -456,7 +456,7 @@ class UserControllClass < DBControllClass
       return false
     end
 
-    sql = 'select uuid from kouhou.users where email=?;'
+    sql = 'select uuid from kouhou.users where email=? and del_flg=0;'
     res = execSql(sql, email)
     
     if res.count!=1
@@ -464,7 +464,15 @@ class UserControllClass < DBControllClass
       return false
     end
 
+    uuid = res.first['uuid']
+    password = generateTmpPasscode()
+    password_hash = HashSHA.get512(password + uuid + 'XQQ2021');
 
-    return false
+    sql = 'update kouhou.users set passhash=? where uuid=? and email=? and del_flg=0;'
+    execSql(sql, password_hash, uuid, email)
+
+    sendNewPassEmail(email, password)
+
+    redirect to('/user_reset_msg.html')
   end
 end

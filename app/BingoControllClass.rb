@@ -1,8 +1,10 @@
 # coding: utf-8
 require "rubygems"
 require "sinatra/base"
+#require "./../../home/kouhou/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/cross_origin-0.0.2/lib/cross_origin-0.0.2.rb"
 require 'mysql2'
 require 'json'
+require 'sinatra/cross_origin'
 
 require "./functions/hash_class.rb"
 require "./CommonClass.rb"
@@ -192,7 +194,7 @@ class BingoControllClass < NewsControllClass
     uuid = session[:uuid]
 
     # トークンチェック
-    unless checkUserToken('/kousenuser/logout')
+    unless checkUserToken('https://www.kousensai.jp/kousenuser/logout')
       return false
     end
 
@@ -227,12 +229,14 @@ class BingoControllClass < NewsControllClass
   end
 
   # ビンゴデータをクライアントに渡す
+  register Sinatra::CrossOrigin
   get '/bingo/play' do
+    cross_origin
     uuid = session[:uuid]
     # トークンチェック
-    if checkUserToken('/kousenuser/logout') == false
-      return false
-    end
+    #if checkUserToken('https://www.kousensai.jp/kousenuser/logout') == false
+    #  return false
+    #end
 
     sql = 'select bingo from kouhou.bingo_users where uuid=? and ena_flg=1 and del_flg=0;'
     res = execSql(sql, uuid);
@@ -245,15 +249,16 @@ class BingoControllClass < NewsControllClass
 
   # ビンゴしているか判定し、クライアントにステータスと抽選済みの番号配列を返す
   get '/bingo/numbers' do
+    cross_origin
     param_hash = params['hash']
     uuid = session[:uuid]
     # game_idは2021を使用
     game_id = 2021
 
     # トークンチェック
-    unless checkUserToken('/kousenuser/logout')
-      return false
-    end
+    #unless checkUserToken('/kousenuser/logout')
+    #  return false
+    #end
 
     sql = 'select bingo, hash from kouhou.bingo_users where uuid=? and ena_flg=1 and del_flg=0;'
     res = execSql(sql, uuid);
