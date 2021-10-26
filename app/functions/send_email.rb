@@ -81,7 +81,7 @@ def sendAuthAdminEmail(email, username, passcode, access_key, uuid)
  #{username} 様
 
 パスワード認証のパスコードが発行されました。以下のリンクを開いて、パスコードを入力してください。
-有効期間は10分です。
+有効期間は30分です。
 
 パスコード : #{passcode}
 

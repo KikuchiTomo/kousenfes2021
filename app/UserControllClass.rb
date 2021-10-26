@@ -64,7 +64,7 @@ class UserControllClass < DBControllClass
     # ソルトはXQQ2021
     passcode_hash   = HashSHA.get512(passcode + uuid + 'XQQ2021');
     # 有効期限を10分
-    passcode_expire = Time.now + 10 * 60
+    passcode_expire = Time.now + 30 * 60
     if isupdate then
       # 存在する場合は，更新する
       # ユーザ情報を更新
