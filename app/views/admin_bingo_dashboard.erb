@@ -1,0 +1,68 @@
+<%
+html=''
+for i in 0..14       
+html +=         "<tr>\n"\
+                    +"<td><a href=\"/kousenadmin/bingo/lottery?num=#{i+1}\"  class=\"#{(@nums.include?(i+1))  ? "open" : "" }\">#{i+1}</a></td>\n"\
+                    +"<td><a href=\"/kousenadmin/bingo/lottery?num=#{i+16}\" class=\"#{(@nums.include?(i+16)) ? "open" : "" }\">#{i+16}</a></td>\n"\
+                    +"<td><a href=\"/kousenadmin/bingo/lottery?num=#{i+31}\" class=\"#{(@nums.include?(i+31)) ? "open" : "" }\">#{i+31}</a></td>\n"\
+                    +"<td><a href=\"/kousenadmin/bingo/lottery?num=#{i+46}\" class=\"#{(@nums.include?(i+46)) ? "open" : "" }\">#{i+46}</a></td>\n"\
+                    +"<td><a href=\"/kousenadmin/bingo/lottery?num=#{i+61}\" class=\"#{(@nums.include?(i+61)) ? "open" : "" }\">#{i+61}</a></td>\n"\
+                +"</tr>\n"
+end
+%>
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ビンゴ管理 | 高専祭管理者ページ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin_proj_bingo.css">
+    <link rel="stylesheet" href="/css/style.css">    
+</head>
+
+<body>
+  <div class="body">
+    <div class="side-menu">
+        <div class="title"></div>
+        <a href="/kousenadmin/dashboard">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </div>
+    <div class="main-content">
+        <div class="side-margin">
+            <a href="/kousenadmin/bingo/start">ビンゴを開始</a>
+            <a href="/kousenadmin/bingo/stop">ビンゴを停止</a>
+            <a href="/kousenadmin/bingo/get/bingo/users/list">ビンゴ者リスト</a>
+        </div>
+        <form action="/kousenadmin/proj/update/edit" method="post" accept-charset="utf-8">
+           
+           <table class="bingo-table" border="1">
+                <tr>
+                   <td>B</td><td>I</td><td>N</td><td>G</td><td>O</td>
+                </tr>
+                <%= html %>
+           </table>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        window.onload = () => {
+            var m = document.getElementById('content');
+
+            m.addEventListener('keyup', () => {
+                var view = document.getElementById('preview-area');
+                var html = marked(document.getElementById('content').value);
+                view.innerHTML = html;
+            })
+        }
+    </script>
+    </div>
+    </body>
+</html>

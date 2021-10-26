@@ -127,6 +127,42 @@ class BingoControllClass < NewsControllClass
     return status
   end
 
+  # ビンゴゲームの状態を保存・取得
+  def startBingoGame()
+    sql = 'update kouhou.bingo_game_status set status=1 where ena_flg=1 and del_flg=0 and game_id=2021;'
+    execSql(sql)
+  end
+
+  def stopBingoGame()
+    sql = 'update kouhou.bingo_game_status set status=-1 where ena_flg=1 and del_flg=0 and game_id=2021;'
+    execSql(sql)
+  end
+
+  def isStartBingoGame()
+    sql = 'select status from kouhou.bingo_game_status where ena_flg=1 and del_flg=0 and game_id=2021;'
+    res = execSql(sql)
+    return false if res.count!=1
+    return false if res.first['status']!=1
+    return true if res.first['status']==1
+    return false
+  end
+
+  def getNowTurn()
+    sql = 'select turn from kouhou.bingo_game_status where ena_flg=1 and del_flg=0 and game_id=2021;'
+    res = execSql(sql)
+    return -1 if res.count!=1
+    return res.first['turn']
+  end
+
+  def indcBingoGameTurn(diff)
+    turn = getNowTurn() 
+    return false if !isStartBingoGame()
+    return false if turn==-1
+    sql = 'update kouhou.bingo_game_status set turn=? where ena_flg=1 and del_flg=0 and game_id=2021;'
+    execSql(sql, turn+diff)
+    return true
+  end
+
   # ビンゴカードを生成し、登録する
   get '/kousenadmin/bingo/generate' do
     # トークンチェック
@@ -135,18 +171,20 @@ class BingoControllClass < NewsControllClass
     end
     # uuidの初期値は'0-0-0-0'
     uuid = '0-0-0-0'
-    bingo = generateBingoCard()
+    300.times do |n|
+      bingo = generateBingoCard()
 
-    # 平坦化したビンゴカードのJSON
-    hash_bingo = {num: bingo.flatten}.to_json
-    # ソルトはBNG2021 
-    hash = HashSHA.get512(hash_bingo + 'BNG2021');
-    bingo_data = {num: bingo}.to_json
+      # 平坦化したビンゴカードのJSON
+      hash_bingo = {num: bingo.flatten}.to_json
+      # ソルトはBNG2021 
+      hash = HashSHA.get512(hash_bingo + 'BNG2021');
+      bingo_data = {num: bingo}.to_json
 
-    sql = 'insert into kouhou.bingo_users (uuid, hash, bingo) values (?,?,?);'
-    execSql(sql, uuid, hash, bingo_data);
+      sql = 'insert into kouhou.bingo_users (uuid, hash, bingo) values (?,?,?);'
+      execSql(sql, uuid, hash, bingo_data);
+    end
 
-    return true
+    redirect to('/kousenadmin/dashboard')
   end
 
   # ビンゴカードをユーザに割り当てる
@@ -158,32 +196,34 @@ class BingoControllClass < NewsControllClass
       return false
     end
 
+    unless isStartBingoGame()
+      raise CommonErrorView, "ビンゴ開始前-ビンゴゲームは開始されていません"
+      return false
+    end
     # 既にデータの割り振られたuuidでないか確認
     sql = 'select id from kouhou.bingo_users where uuid=? and ena_flg=1 and del_flg=0;'
     res = execSql(sql, uuid);
-    if res.size != 0
-      # ERROR
-      return false
+
+    if res.size == 0
+      sql = 'select id from kouhou.bingo_users where uuid=? and ena_flg=1 and del_flg=0;'
+      res = execSql(sql, "0-0-0-0");
+
+      if res.count <= 0
+        raise CommonErrorView, "ビンゴエラー-ビンゴデータが不足しています"
+        return false
+      end
+
+      ids = []
+      res.each do |n|
+        ids.push(n['id'])
+      end
+      id = ids.sample
+
+      sql = 'update kouhou.bingo_users set uuid=?, status=? where id=? and ena_flg=1 and del_flg=0;'
+      execSql(sql, uuid, -1, id);
     end
 
-    sql = 'select id from kouhou.bingo_users where uuid=? and ena_flg=1 and del_flg=0;'
-    res = execSql(sql, "0-0-0-0");
-
-    if res.count <= 0
-      raise CommonErrorView, "ビンゴエラー-ビンゴデータが不足しています"
-      return false
-    end
-
-    ids = []
-    res.each do |n|
-      ids.push(n['id'])
-    end
-    id = res.sample
-
-    sql = 'update kouhou.bingo_users set uuid=?, status=? where id=? and ena_flg=1 and del_flg=0;'
-    execSql(sql, uuid, -1, id);
-
-    erb:
+    erb :play_bingo
   end
 
   # ビンゴデータをクライアントに渡す
@@ -198,14 +238,14 @@ class BingoControllClass < NewsControllClass
     res = execSql(sql, uuid);
 
     data = {
-      bingo: res.first[:bingo]
+      bingo: res.first['bingo']
     }
-    return data.to_json
+    return res.first['bingo']#data.to_json
   end
 
   # ビンゴしているか判定し、クライアントにステータスと抽選済みの番号配列を返す
   get '/bingo/numbers' do
-    param_hash = params[:hash]
+    param_hash = params['hash']
     uuid = session[:uuid]
     # game_idは2021を使用
     game_id = 2021
@@ -233,33 +273,68 @@ class BingoControllClass < NewsControllClass
     end
     is_open.flatten!
 
-    status = bingoCheck(bingo, is_open)
+    sql = 'select status from kouhou.bingo_users where ena_flg=1 and del_flg=0 and uuid=?;'
+    sdb = execSql(sql, uuid)
 
-    # ユーザのステータスを変更
-    sql = 'update kouhou.bingo_users set status=? where uuid=? and ena_flg=1 and del_flg=0;'
-    execSql(sql, status, uuid);
+    if sdb.count!=1
+      return "Error"
+    end
 
+    # 前回ビンゴしていないならばビンゴのturn数を更新する
+    status_db = sdb.first['status']
+    status = bingoCheck(res.first['bingo'], is_open)
+    turn_b = getNowTurn()
+    
+    if status_db!=-2    
+      # ユーザのステータスを変更      
+      sql = 'update kouhou.bingo_users set status=?, turn=? where uuid=? and ena_flg=1 and del_flg=0;'
+      execSql(sql, status, turn_b, uuid);
+    else
+      # 前回ビンゴならずっとビンゴ状態のままにしておく
+      sql = 'update kouhou.bingo_users set status=? where uuid=? and ena_flg=1 and del_flg=0;'
+      execSql(sql, -2, uuid);
+    end    
+
+    turn_b = 0 if turn_b==nil
     data = {
       bingo_id: game_id,
       status: status,
-      is_open: is_open
+      is_open: is_open,
+      turn: turn_b
     }
     return data.to_json
   end
 
   # 指定されたnumのstarusを1(Opened)にする
-  post '/kousenadmin/bingo/lottery' do
-    num = params[:num]
+  get '/kousenadmin/bingo/lottery' do
+    num = params['num']||=''
+    
+    return "NEED ARGS" if(num=='')
 
     # トークンチェック
     unless checkAdminToken('/kousenuser/logout')
       return false
     end
 
+    return "not started" if !isStartBingoGame()
+    # すでにオープンだったら閉じる
+    sql = 'select status from kouhou.bingo_nums where ena_flg=1 and del_flg=0 and num=?;'
+    res = execSql(sql, num)
+    return "ERROR: NO NUM" if res.count==0
+    status = res.first['status']
+    
+    is_open = 1
+    is_open = 0 if(status==1)
     sql = 'update kouhou.bingo_nums set status=? where num=? and ena_flg=1 and del_flg=0;'
-    execSql(sql, 1, num);
+    execSql(sql, is_open, num);
 
-    return true
+    if is_open==1
+      indcBingoGameTurn(1)      
+    else
+      indcBingoGameTurn(-1)
+    end
+
+    redirect to('/kousenadmin/bingo/dashboard')
   end
 
   # ビンゴ,リーチしている人数をカウントして返す
@@ -276,5 +351,122 @@ class BingoControllClass < NewsControllClass
     }
     return data.to_json
   end
+
+  get '/kousenadmin/bingo/dashboard' do
+    unless checkAdminToken('/kousenadmin/logout')
+      return false
+    end
+   
+    sql ='select num from kouhou.bingo_nums where game_id=? and status=? and ena_flg=1 and del_flg=0;'
+    num = execSql(sql, 2021, 1);
+    # numを配列化
+    is_open = Array.new
+    num.each do |hash|
+      is_open << hash.values
+    end
+
+    is_open.flatten! if is_open!=nil
+
+    @nums = [0] 
+    @nums = @nums + is_open if is_open!=nil
+    p @nums
+    @turn_b = getNowTurn()
+    erb :admin_bingo_dashboard
+  end
+
+  get '/kousenadmin/bingo/start' do
+    unless checkAdminToken('/kousenadmin/logout')
+      return false
+    end
+    
+    startBingoGame()
+    redirect to('/kousenadmin/bingo/dashboard')
+  end
+
+  get '/kousenadmin/bingo/stop' do
+    unless checkAdminToken('/kousenadmin/logout')
+      return false
+    end
+    
+    stopBingoGame()
+    redirect to('/kousenadmin/bingo/dashboard')
+  end
+
+  def parse_html(hash, iteration=0 )
+    iteration += 1
+    output = ""
+    hash.each do |key, value|
+
+        if value.is_a?(Hash)
+            output += "<div class='entry' style='margin-left:#{iteration}em'> <span style='font-size:#{250 - iteration*20}%'>#{key}: </span><br>"
+            output += parse(value,iteration)
+            output += "</div>"
+        elsif value.is_a?(Array)
+            output += "<div class='entry' style='margin-left:#{iteration}em'> <span style='font-size:#{250 - iteration*20}%'>#{key}: </span><br>"
+            value.each do |value|
+                if value.is_a?(String) then
+                    output += "<div style='margin-left:#{iteration}em'>#{value} </div>"
+                else
+                    output += parse(value,iteration-1)
+                end
+            end
+            output += "</div>"
+
+        else
+            output += "<div class='entry' style='margin-left:#{iteration}em'> <span style='font-weight: bold'>#{key}: </span>#{value}</div>"
+        end
+    end
+    return output
+end
+
+  get '/kousenadmin/bingo/get/bingo/users/list' do
+    is_admin = checkAdminToken('/kousenadmin/logout')
+    unless is_admin
+      return false
+    end
+
+    permit_user  = session[:permit_user]
+    permit_bingo = session[:permit_bingo]
+
+    unless permit_user==1 && permit_bingo==1
+      return "Permission denied: bye"
+    end
+
+    sql = 'select users.id, users.last_name, users.first_name, users.grade, users.course, users.email, users.uuid, bingo_users.turn from users inner join bingo_users on users.uuid = bingo_users.uuid where bingo_users.status = -2 order by bingo_users.turn desc;'
+    res = execSql(sql)
+
+    if(res.count<=0)
+      return "ビンゴ者はいません"
+    end
+
+    @us = []
+    res.each{ |row|
+      h = {}
+      h['name'] = row['last_name'].to_s + " " + row['first_name'].to_s
+      h['grade'] = row['course'].to_s + row['grade'].to_s
+      h['email'] = row['email']
+      h['uuid']  = row['uuid']
+      h['id']  = row['id']
+      h['turn'] = row['turn']
+      @us.push(h)
+    }
+
+    
+    return parse_html(JSON.parse(@us.to_json))
+  end
+  # もう使わない
+  #get '/kousenadmin/bingo/num_prepare' do
+  #  checkAdminToken('/kousenadmin/logout')
+  #  game = params['game_id']||=''
+  #  return "need args" if game==''
+
+  #  sql = 'insert into bingo_nums (num,  game_id) values (?,?);'
+    
+  #  for num in 1..75 
+  #    execSql(sql, num, game)
+  #  end
+
+  #  return "DONE"
+  #end
 
 end

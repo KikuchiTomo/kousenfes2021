@@ -451,7 +451,7 @@ class UserControllClass < DBControllClass
   post '/kousenuser/STN/reset' do
     email = params['RSTxxOHCE'] ||=''
     mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
-    if email==nil || email=='' || !email.match? mailRegex
+    if email==nil || email==''# || !email.match? mailRegex
       raise CommonErrorView, "形式エラー-形式が不正です"
       return false
     end
