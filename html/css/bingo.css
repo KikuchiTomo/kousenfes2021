@@ -298,7 +298,7 @@ table tr td div{
     line-height: 8vw;
     text-align: center;
     border-radius: 8vw;
-    background: #ff4d00;
+    background: #d90000;
     cursor: pointer;
     margin-right:2vw;
     margin-left:2vw;
@@ -315,7 +315,7 @@ table tr td div:hover{
 table tr td div[data-is-open="0"]{
     font-family: "impact", sans-serif;
     box-shadow:0px 0px 5px 1px black inset;
-    background: #d90000;
+    background: #ff4d00;
     color: white;
     transition: 0.3s;
 }
