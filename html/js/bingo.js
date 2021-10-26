@@ -19,10 +19,13 @@ async function click(props){
     let elm = document.getElementById(props.whr)
     console.log(elm)
     bingo_click = await isopen()    
-//    bingo_click = {"bingo_id":"001","status":"1","isOpen":[[3],[2],[50]]}
+//    bingo_click = "{\"status\":\"1\",\"isOpen\":[[3],[2],[50]]}"
+    bingo_click=JSON.parse(bingo_click)
+
     flag = 0
     for(let i =0 ; i<bingo_click.isOpen.length ; i++){
-        if(JSON.stringify(props.num)==JSON.stringify(bingo_click.isOpen[i])){
+        if(JSON.stringify(props.num)==bingo_click.isOpen[i]){
+            console.log("a")
             flag = 1
         }
     }
@@ -31,7 +34,7 @@ async function click(props){
         elm.dataset.isOpen = 0
     }
     console.log(elm.dataset.isOpen)
-    elm.innerHTML= (elm.dataset.isOpen==1)? String(props.num) :"OP";
+    elm.innerHTML= (elm.dataset.isOpen==1)? String(props.num) :"★";
     return  
 }
 
@@ -43,7 +46,7 @@ function bingoSquare(props, onClick){
 
     // render
     let sq_num = document.createElement('div');
-    sq_num.innerHTML = (this.isOpen==1) ? String(this.num) : "OP";
+    sq_num.innerHTML = (this.isOpen==1) ? String(this.num) : "★";
     sq_num.id= this.where;
     sq_num.dataset.number = this.num;
     sq_num.dataset.isOpen = this.isOpen;
@@ -70,7 +73,6 @@ function bingoSheet(BingoData){
         }
         bingo_sheet.appendChild(row);
     }
-//    console.log(bingo_sheet)
     return bingo_sheet;
 }
 
@@ -89,14 +91,20 @@ async function getBingoDataFromServer(){
 
 async function execBingo(config){       //最初に呼び出す関数
     this.id = config.id || "none"
-//    bingo_data={"bingo_id":"001","num":[[[1],[2],[50],[3],[4]],[[5],[6],[7],[8],[9]],[[10],[11],[12],[13],[14]],[[15],[16],[17],[18],[19]],[[20],[21],[22],[23],[24]]],"isOpen":[[[1],[1],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]]}     //kari
-    bingo_data = await getBingoDataFromServer();
-    console.log(bingo_data)
-    console.log(bingo_data.bingo_id)    
+    bingo_data={"num":[[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]],"isOpen":[[[1],[1],[1],[1],[1]],[[1],[1],[1],[1],[1]],[[1],[1],[1],[1],[0]],[[0],[0],[0],[0],[0]],[[0],[0],[0],[0],[0]]]}     //kari
+    bingo_json = await getBingoDataFromServer();
+//    bingo_json="{\"num\": [[12,15,1,2,3],[27,23,17,30,28],[34,35,0,43,44],[53,58,49,57,60],[67,63,65,61,75]]}"
+    bingo_json = JSON.parse(bingo_json).num  
 
-    if(bingo_data===null){
-        console.log("Error");
+    if(bingo_json===null){
+        console.log("Error")
+        window.alert("Error")
     }else{
+        for(let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+                bingo_data.num[i][j]=bingo_json[i][j];
+            }
+        }
         let bingo_elem = bingoSheet(bingo_data);
         let bingo_container = document.getElementById(this.id);        
         bingo_container.appendChild(bingo_elem); // create Bingo

@@ -255,25 +255,41 @@ section.index-info{
 
 .video iframe{
     display: block;
-    height:27vw;
-    width:48vw;
+    height:45vw;
+    width:80vw;
     margin: auto;
     margin-bottom: 10px;
 }
 
+.bingo_sheet{
+    height:17vw;
+    width:74vw;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+p{
+    padding:2.5vw;
+    font-size:5vw;
+}
+
 div#bingo-container{
+    font-size:5vw;
     z-index: 999;
-    color: black;
+    color: white;
 }
 
 table{
-    background:gold;
+    background:white;
     margin-right:auto;
     margin-left:auto;
+    border:solid;
+    border:7vw solid;
+    border-color:#ffb938;
 }
 
 table tr td div{
-    font-family: 'Noto Sans JP', sans-serif;
+    font-family: "impact", sans-serif;
     margin: 1px;
     height: 8vw;
   /*   max-height: 120px;
@@ -282,7 +298,7 @@ table tr td div{
     line-height: 8vw;
     text-align: center;
     border-radius: 8vw;
-    background: white;
+    background: #ff4d00;
     cursor: pointer;
     margin-right:2vw;
     margin-left:2vw;
@@ -293,13 +309,14 @@ table tr td div{
 table tr td div:hover{
     transition:1s;
     color:white;
-    background:black;
+    background:green;
 }
 
 table tr td div[data-is-open="0"]{
-    box-shadow:0px 0px 8px 3px black inset;
-    background: black;
-    color: blue;
+    font-family: "impact", sans-serif;
+    box-shadow:0px 0px 5px 1px black inset;
+    background: #d90000;
+    color: white;
     transition: 0.3s;
 }
 
