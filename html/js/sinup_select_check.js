@@ -297,3 +297,98 @@ const checkGradeShowHidden = () => {
         sel1.disabled = true;
     }
 }
+
+const switchGradeSelects = (sel ,is_show) => {
+    var grade12345 = document.getElementById('grade-12345');
+    var grade123   = document.getElementById('grade-123');
+    var grade12    = document.getElementById('grade-12');
+   console.log(grade12345, grade123, grade12);
+
+    // 表示を切り替え
+    if(sel==0){        
+        grade12345.style.display = 'inline';
+        grade123.style.display   = 'none';
+        grade12.style.display    = 'none';
+        grade12345.disabled      = false;
+        grade123.disabled        = true;
+        grade12.disabled         = true;
+    }else if(sel==1){
+        grade12345.style.display = 'none';
+        grade123.style.display   = 'inline';
+        grade12.style.display    = 'none'; 
+        grade12345.disabled      = true;
+        grade123.disabled        = false;
+        grade12.disabled         = true;
+    }else{
+        grade12345.style.display = 'none';
+        grade123.style.display   = 'none';
+        grade12.style.display    = 'inline'; 
+        grade12345.disabled      = true;
+        grade123.disabled        = true;
+        grade12.disabled         = false;
+    }
+
+     // 有効無効
+     if(!is_show){
+        grade12345.disabled = !is_show;
+        grade123.disabled   = !is_show;
+        grade12.disabled    = !is_show;
+    }
+}
+
+const switchCourseSelects = (sel, is_show) => {
+    var course0 = document.getElementById('select-course');
+    var class0  = document.getElementById('select-class');
+
+    if(sel==0){
+        course0.style.display = 'inline';
+        class0.style.display  = 'none';
+        course0.disabled = false;
+        class0.disabled = true;
+    }else{
+        course0.style.display = 'none';
+        class0.style.display  = 'inline';
+        course0.disabled = true;
+        class0.disabled = false;
+    }
+
+    if(!is_show){
+        course0.disabled = !is_show;
+        class0.disabled  = !is_show;
+    }   
+}
+
+const controlSelect = () => {
+    // 選択肢を動的に変えるのは，種別と学年の選択時のみ    
+    var cates = document.getElementById('select-cate');
+    
+    var cate =  cates.selectedIndex; // 選択中のインデックス
+    if(cate===1){ // 本科
+        switchGradeSelects(0,  true); // 1~5を表示
+        var grade = document.getElementById('grade-12345').selectedIndex;
+        if(grade===1){ // 一年を選択時
+            switchCourseSelects(1, true); // クラスを表示
+        }else{
+            switchCourseSelects(0, true); // コースを表示
+        }
+    }else if(cate===2){ // 専攻科
+        switchGradeSelects(2,  true); // 1~2を表示
+        switchCourseSelects(0, false); // 非表示
+    }else if(cate===3){ // その他
+        switchCourseSelects(0, false); // 非表示
+        switchGradeSelects(0,  false); // 非表示
+    }else{
+        switchCourseSelects(0, false); // 非表示
+        switchGradeSelects(0,  false); // 非表示
+    }
+    console.log("Hello");
+}
+
+const setInitSelect = () => {
+    document.getElementById('select-cate').selectedIndex = 0;
+    document.getElementById('select-course').selectedIndex = 0;
+    document.getElementById('select-class').selectedIndex = 0;
+    document.getElementById('grade-12345').selectedIndex = 0;
+    document.getElementById('grade-123').selectedIndex = 0;
+    document.getElementById('grade-12').selectedIndex = 0;
+}

@@ -159,7 +159,7 @@ class UserControllClass < DBControllClass
     lname_rb = params['last_name_h']  ||=''
     cate = params['cate'] ||=''
     cate = cate.to_i if cate!=''
-    sname = params['school-name'] ||=''
+    nick_name = params['nick-name'] ||='名無し'
     grade = params['grade'] ||=-1
     course = params['course'] ||=''
     password = params['password'] ||=''
@@ -193,13 +193,8 @@ class UserControllClass < DBControllClass
             return false
           end
         elsif cate==2 # 高専専攻科
-          if course==''
+          if grade==''
             raise CommonErrorView, '入力が不正です-学年が登録されていません'
-            return false
-          end
-        elsif cate==3 # 中学生
-          if grade==''||sname==''
-            raise CommonErrorView, '入力が不正です-学年または学校名が登録されていません'
             return false
           end
         else # 保護者・その他
@@ -238,19 +233,60 @@ class UserControllClass < DBControllClass
 
     # 可読性が落ちるけどテーブル作る時間もないので
     # 登録処理
-    sql = 'insert into kouhou.users (uuid, email, first_name, last_name, first_name_rb, last_name_rb, grade, passhash, token, token_expire, course, status) values (?,?,?,?,?,?,?,?,?,?,?,?);'
+    sql = 'insert into kouhou.users (uuid, email, first_name, last_name, first_name_rb, last_name_rb, grade, passhash, token, token_expire, course, status, nick_name) values (?,?,?,?,?,?,?,?,?,?,?,?,?);'
     expired_time = Time.local(1960, 1, 1, 12, 0, 0, 0);
     set_me_token = 'setmetoken'
     grade_int = (grade!='') ? grade.to_i : -1; 
     
     # ソルトはXQQ2021
+    nick_name_html = CGI.escapeHTML(nick_name)
     password_hash = HashSHA.get512(password + uuid + 'XQQ2021');
-    execSql(sql, uuid, email, fname, lname, fname_rb, lname_rb, grade_int, password_hash, set_me_token, expired_time, course, 0);
+    execSql(sql, uuid, email, fname, lname, fname_rb, lname_rb, grade_int, password_hash, set_me_token, expired_time, course, 0, nick_name_html);
     puts "#{(Time.now - start0)} Reged user"
 
     # メール送る
     sendAuthEmail(email, fname, passcode, access_key, uuid)
     puts "#{(Time.now - start0)} Sent email"
+    # メッセージ画面へ遷移
+    redirect to('/user_sinup_msg.html')
+  end
+
+  get '/kousenuser/tmp/reset' do
+    erb :user_tmp_reset
+  end
+
+  post '/kousenuser/tmp/reset' do
+    email = params['RSTxxOHCE'] ||=''
+
+    if(email==''||email.size<5||email.size>256)
+      raise CommonErrorView, "不正な形式-値が不正です";
+      return false;
+    end
+
+    sql = 'select first_name,uuid from users where status=0 and del_flg=0 and email=?;'
+    res = execSql(sql, email)
+
+    if res.count!=1
+      raise CommonErrorView, "DBエラー-ユーザは存在しません"
+      return false
+    end
+
+    uuid  = res.first['uuid']
+    fname = res.first['first_name']
+
+     # passcode生成
+     passcode = generateTmpPasscode()
+     access_key = HashSHA.get512(SecureRandom.uuid + "#{Time.now}")
+     # DBへ登録
+     result = registerTmpPasscode(uuid, passcode, access_key, true)
+     #puts "#{(Time.now - start0)} Reged tmp"
+     if !result
+       raise CommonErrorView, '登録エラー-サーバで処理エラーが発生しました'
+       return false
+     end
+    
+      # メール送る
+    sendAuthEmail(email, fname, passcode, access_key, uuid)
     # メッセージ画面へ遷移
     redirect to('/user_sinup_msg.html')
   end
@@ -271,6 +307,7 @@ class UserControllClass < DBControllClass
     sql = 'select status from kouhou.users where del_flg=0 and uuid=?;'
     res = execSql(sql, uuid)
 
+    puts "Exist #{res.count}"
     # ユーザの存在確認
     if(res.size!=1 || res==nil)
       raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。有効なユーザは存在しません。'

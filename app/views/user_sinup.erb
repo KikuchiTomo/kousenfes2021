@@ -85,6 +85,9 @@
           <input name="first_name_h" type="text" maxlength="20" placeholder="ふりがな(名)" class="form input " pattern="[\u3041-\u3096]*"
             required>
         </div>
+        <p class="form-required">ニックネーム</p>
+        <input class="form input" type="text" name="nick-name" placeholder="例：ひろし" id="school-name" required>
+
         <p class="form-required">種別</p>
 
         <div class="drop-down-con">
@@ -93,38 +96,43 @@
               <option value="" disabled selected style="display:none;">種別を選択して下さい</option>
               <option value="1">産技高専・本科</option>
               <option value="2">産技高専・専攻科</option>
-              <option value="3">中学生</option>
-              <option value="4">保護者</option>
               <option value="5">その他</option>
             </select>
             <label for="select-status">▼</label>
           </div>
         </div>
 
-        <p class="form-required">学校名</p>
-        <input class="form input" type="text" name="school-name" placeholder="〇〇立〇〇高等専門学校" id="school-name" required>
-
         <p class="form-required">学年</p>
         <div class="drop-down-con">
-          <div class="drop-down">
-            <select name="grade" class="form input" id="select-grade" id="grade" required>
+          <div class="drop-down" id="grade-123450">
+            <select name="grade" class="form input" id="grade-12345" required>
               <option value="" disabled selected style="display:none;">学年を選択して下さい</option>
               <option value="1">1</option>
-              <option value="2" id="grade-2">2</option>
-              <p id="grade-3s">
-                <option value="3" id="grade-3">3</option>
-              </p>
-              <p id="grade-4s">
-                <option value="4" id="grade-4">4</option>
-              </p>
-              <p id="grade-5s">
-                <option value="5" id="grade-5">5</option>
-              </p>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <label for="select-status">▼</label>
+          </div>
+           <div class="drop-down" id="grade-1230">
+            <select style="display:none;" name="grade" class="form input" id="grade-123" required>
+              <option value="" disabled selected style="display:none;">学年を選択して下さい</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+            <label for="select-status">▼</label>
+          </div>
+           <div class="drop-down" id="grade-120">
+            <select style="display:none;" name="grade" class="form input" id="grade-12" required>
+              <option value="" disabled selected style="display:none;">学年を選択して下さい</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
             </select>
             <label for="select-status">▼</label>
           </div>
         </div>
-
         <p class="form-required">組・コース名</p>
         <div class="drop-down-con">
           <div class="drop-down">
@@ -174,7 +182,7 @@
     const spinner = document.getElementById('loading');
     spinner.classList.add('loaded');
 
-    var userAgent = window.navigator.userAgent.toLowerCase();
+    /* var userAgent = window.navigator.userAgent.toLowerCase();
 
     selectCheck();
     if (userAgent.indexOf('msie') != -1 ||
@@ -193,11 +201,13 @@
       document.getElementById('select-cate').addEventListener('change', selectCheck)
     } else {
       
-    }
-
-    document.getElementById('select-grade').addEventListener('change', checkGradeShowHidden)
+    } */
+    
+    document.getElementById('grade-12345').addEventListener('change',  controlSelect)
+    document.getElementById('select-cate').addEventListener('change', controlSelect)
     addEventCheckPassDiff();
-
+    setInitSelect();
+    controlSelect();
   }
 
 </script>

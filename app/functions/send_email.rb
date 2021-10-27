@@ -43,15 +43,15 @@ def sendAuthEmail(email, username, passcode, access_key, uuid)
  #{username} 様
 
 パスワード認証のパスコードが発行されました。以下のリンクを開いて、パスコードを入力してください。
-有効期間は10分です。
+有効期間は30分です。
 
 パスコード : #{passcode}
 
 URL : https://www.kousensai.jp/kousenuser/sinup/entry?accesskey=#{access_key}&uuid=#{uuid}
 
-なお、パスコードが期限切れとなった場合には、以下のリンクより再発行の手続きをお願い致します。
+なお、パスコードが期限切れとなった場合には、以下のURLにアクセスしていただき再度手続きを行なって下さい
 
-パスコード再発行URL : https://www.kousensai.jp/kousenuser/reset
+認証用パスコード再発行 : https://www.kousensai.jp/kousenuser/tmp/reset
 
 ============================
 都立産業技術高専 高専祭実行委員会 広報部署

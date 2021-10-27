@@ -4,16 +4,16 @@
     <!--　覗いた人への言い訳: 結合テストも単体テストしてないので，バックエンド側にバグあるかもしれないけど，一応セキュリティの対策はしてます -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
-    <title>Login - 第53回 高専祭</title>
-    <link rel="shortcut icon" href="favicon.ico">
+    <title>パスコード再発行 - 第57回 高専祭</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/user.css">
-    <script src="js/scroll_change_color.js"></script>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/user.css">
+    <script src="/js/scroll_change_color.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script>
       function closeMenu(){
@@ -24,7 +24,7 @@
   </head>
   <body id="body" class="scroll-bar scroll-bar-width">
     <div class="loading" id="loading">
-      <img src="favicon.ico">
+      <img src="/img/TMCIT_LOGO_REV_M.png">
     </div>
     
     <section id="top" class="user-top">
@@ -43,9 +43,9 @@
       <nav class="menu-container">
         <br>
         <a href="/">Top</a>
-        <a href="/search" onclick="closeMenu()" class="current-page">Search</a>
+        <a href="/search" onclick="closeMenu()" >Search</a>
         <a href="/news">News</a>
-        <a href="/mypage">My Page</a>
+        <a href="/kousen/mypage" class="">My Page</a>
       </nav>            
       <div class="menu-background scroll-changed" id="menu-bak">
         <h1><div class="header-img"></div></h1>
@@ -54,14 +54,12 @@
     
     <section class="index-info">
       <div id="user-container" class="user">
-        <h1>ログイン</h1>
-        <form method="post" accept-charset="utf-8" action="/kousenuser/STN/login">
-            <input type="email" name="STMxxOHCE" class="email" placeholder="Email Address" maxlength="60" minlength="3" pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$" required>
-            <input type="password" name="STNxxECHO" class="pass" placeholder="Password" maxlength="256" minlength="4" required>
-            <button type="submit" class="login">LOGIN ＞</button>
+        <h1>パスコード再発行</h1>
+        <form method="post" accept-charset="utf-8" action="/kousenuser/tmp/reset">
+            <input type="email" name="RSTxxOHCE" class="email" placeholder="Email Address" maxlength="60" minlength="3" pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$" required>
+            <button type="submit" class="login">RESET ＞</button>
         </form>
-        <a href="/kousenuser/sinup" class="sinup">ユーザ新規登録の方はこちら</a>
-        <a href="/kousenuser/reset">パスワードを忘れた方はこちら</a>
+        <a href="/kousenuser/login">ユーザログインはこちら</a>
       </div>
      
         <!-- <div class="error-show">

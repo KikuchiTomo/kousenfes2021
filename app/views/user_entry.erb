@@ -35,7 +35,7 @@
   </head>
   <body id="body" class="scroll-bar scroll-bar-width">
     <div class="loading" id="loading">
-      <img src="favicon.ico">
+      <img src="/favicon.ico">
     </div>
     
     <section id="top" class="user-top">
@@ -66,25 +66,17 @@
     <section class="index-info">
       <div id="user-container" class="user">
         <h1>ユーザ認証</h1>
+        <p class="reset-info">メールに送付された確認用パスコードを入力してください</p>
         <form method="post" accept-charset="utf-8" action="/kousenuser/sinup/entry"> 
             <input type="hidden" name="uuid" value="<%= @uuid %>" require>
             <input type="text" name="passcode" class="pass" placeholder="Your Passcode" maxlength="8" minlength="8" required>
             <button type="submit" class="login">CONFIRM ＞</button>
         </form>
        
-        <small class="reset-info">有効期限は10分です</small>
-        <a href="/user/reset">パスコードの期限切れの方はこちら</a>        
+        <small class="reset-info">有効期限は30分です</small>
+        <a href="/kousenuser/tmp/reset">パスコードの期限切れの方はこちら</a>        
       </div>
      
-        <!-- <div class="error-show">
-            <div>
-                ユーザが存在しません
-            </div>
-            <div>
-                データベース上の整合性が取れていません．管理者へ連絡して下さい
-                <a href="./" class="report">連絡はこちらから</a>
-            </div>
-        </div> -->
     </section>
     <footer>
       <p class="copyright"><small>&copy; 2021 Kousen Festival Committee (TMCIT-ACP). All Rights Reserved</small></p>
