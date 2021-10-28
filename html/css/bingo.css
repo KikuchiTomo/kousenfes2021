@@ -255,12 +255,13 @@ section.index-info{
 
 .video iframe{
     display: block;
-    height:40vw;
-    width:70vw;
-    margin-left:5vw;
+    height:45vw;
+    width:80vw;
+    margin: auto;
     margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
 .video_comment{
     height:40vw;
     width:20vw;
@@ -268,6 +269,8 @@ section.index-info{
     margin-bottom:10px;
 }
 
+=======
+>>>>>>> parent of 3e7c486... bingo_cssの調整
 .bingo_sheet{
     height:17vw;
     width:74vw;
