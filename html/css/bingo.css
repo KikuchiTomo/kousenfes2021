@@ -255,10 +255,17 @@ section.index-info{
 
 .video iframe{
     display: block;
-    height:45vw;
-    width:80vw;
-    margin: auto;
+    height:40vw;
+    width:70vw;
+    margin-left:5vw;
     margin-bottom: 10px;
+}
+
+.video_comment{
+    height:40vw;
+    width:20vw;
+    margin-right:5vw;
+    margin-bottom:10px;
 }
 
 .bingo_sheet{
