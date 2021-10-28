@@ -51,8 +51,8 @@ function createArray(x, y, value) {
 function drawBingoFromServer(config) {
     var bingo_view = config.id || "none"
     let urlList = [
-        "https://www.kousensai.jp/bingo/play",
-        "https://www.kousensai.jp/bingo/numbers"
+        "https://www.kousensai.jp/bingo/entry/play",
+        "https://www.kousensai.jp/bingo/entry/numbers"
     ];
     Promise.all(
         urlList.map(
@@ -95,8 +95,8 @@ function drawBingoFromServer(config) {
                 let bingo_elem = bingoSheet(bingo_data);
                 let bingo_container = document.getElementById(bingo_view);
                 bingo_container.innerHTML = ""; // Viewをクリア
-                bingo_container.appendChild(bingo_elem); // 再描画
-                if (status === -2) alert("ビンゴ!おめでとうございます！");
+                if (status === -2){ alert("ビンゴ!おめでとうございます！"); }
+                else{ bingo_container.appendChild(bingo_elem); }
 
                 // 描画してからメッセージ表示
                 // if(status>0) alert(String(status) + "リーチ！おしい！");  => うぜぇ

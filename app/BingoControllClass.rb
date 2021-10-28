@@ -230,7 +230,7 @@ class BingoControllClass < NewsControllClass
 
   # ビンゴデータをクライアントに渡す
   register Sinatra::CrossOrigin
-  get '/bingo/play' do
+  get '/bingo/entry/play' do
     cross_origin
     uuid = session[:uuid]
     # トークンチェック
@@ -248,7 +248,7 @@ class BingoControllClass < NewsControllClass
   end
 
   # ビンゴしているか判定し、クライアントにステータスと抽選済みの番号配列を返す
-  get '/bingo/numbers' do
+  get '/bingo/entry/numbers' do
     cross_origin
     param_hash = params['hash']
     uuid = session[:uuid]

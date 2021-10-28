@@ -1,5 +1,6 @@
 <%
 html = ''
+if(@news_list!=nil)
 @news_list.each{ |news|
     html += "<tr>"\
                 +"<td>#{news['id']}</td>"\
@@ -11,6 +12,7 @@ html = ''
                 +"<td>#{news['date']}</td>"\
             +"</tr>"\
 }
+end
 %>
 <!DOCTYPE html>
 <html>

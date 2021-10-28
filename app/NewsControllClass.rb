@@ -25,7 +25,8 @@ class NewsControllClass < SearchProjControllClass
         @news['title']  = row['detail_title']
         @news['desc']   = row['detail_desc']
         @news['date']   = row['notify_datetime']
-        @news['path']   = row['image_path']
+        @news['path']   = row['image_path']||="NOIMAGE"
+        #@news['path']   = row['image_path']||="NOIMAGE"
         erb :news_detail
     end
 
