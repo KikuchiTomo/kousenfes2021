@@ -481,12 +481,10 @@ class UserControllClass < DBControllClass
     return true
   end
 
-  # パスワードのリセットのリンクを申請するページ
   get '/kousenuser/reset' do
     erb :user_reset
   end
 
-  # パスワードのリセットのリンクを申請するページ : パスコードとURLを発行
   post '/kousenuser/STN/reset' do
     email = params['RSTxxOHCE'] ||=''
     mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
@@ -495,155 +493,23 @@ class UserControllClass < DBControllClass
       return false
     end
 
-    sql = 'select uuid from kouhou.users where email=? and del_flg=0 and status=2;'
+    sql = 'select uuid from kouhou.users where email=? and del_flg=0;'
     res = execSql(sql, email)
     
     if res.count!=1
-      raise CommonErrorView, "DBエラー-ユーザは存在しません"
+      raise CommonErrorView, "不正ユーザ-ユーザは存在しません"
       return false
     end
-    
+
     uuid = res.first['uuid']
-
-    # 一時 アクセスキーを生成     
-    passcode = generateTmpPasscode()
-    access_key = HashSHA.get512(SecureRandom.uuid + "#{Time.now}")   
-
-    # 一時アクセスキーを登録 (uuid, passcode, access_key, isupdate)
-    registerTmpPasscode(uuid, passcode, access_key, true)
-
-    # メールを送信
-    sendResetURLEmail(email, passcode, access_key, uuid)
-    redirect to('/user_reset_msg.html')
-  end
-
-  # ユーザのパスワード再設定画面(メール送付URLのみからのアクセスなので制限をかける)
-  get '/kousenuser/reset/entry' do
-    access_key = params['accesskey'] ||=''
-    uuid       = params['uuid']      ||=''
-
-    if access_key==''||uuid==''
-      raise CommonErrorView, "不正な値-パラメータが不正です"
-      return false
-    end
-
-    sql = 'select access_key, expire from kouhou.tmp_users where del_flg=0 and ena_flg=1 and uuid=?;'
-    res = execSql(sql, uuid)
-    puts "Count : #{res.size}"
-    # 一時パスコード保管テーブルの存在確認
-    if(res.size!=1||res==nil)
-      raise CommonErrorView, 'データベースの整合性が不正です-指定されたUUIDは不正です。<br>有効な一時ユーザは存在しません。'
-      return false 
-    end
-    puts "DB OK...."
-
-    access_key_db = res.first['access_key']
-
-    # 有効期限確認
-    expire_time = Time.parse(res.first['expire'].to_s)
-    now_time = Time.now
-
-    if expire_time < now_time 
-      # 期限切れ
-      raise CommonErrorView, '有効期限切れです-指定URLは有効期限が切れています。'
-      return false
-    end
-
-    puts "Expire OK...."
-    # アクセスキーの確認
-    if access_key_db != access_key
-      raise CommonErrorView, '指定URLは不正です-指定URLのアクセスキーが不正です。'
-      return false
-    end
-
-    # ここまで来たらメールURLからのアクセス(OK)
-    # ページにパラメータを渡す
-    @uuid = uuid
-    @access_key = access_key
-    #@email = email
-    erb :user_reset_entry
-  end
-
-  # パスワードを変更する
-  post '/kousenuser/reset/entry' do
-    passcode = params['passcode'] ||=''
-    password = params['password'] ||=''
-    access_key = params['access_key'] ||=''
-    uuid     = params['uuid']||=''
-
-    # puts "passcode=>#{passcode} password=>#{password} access_key=>#{access_key} uuid=>#{uuid}" #DEBUG
-    # どれか来てないならエラー
-    if passcode==''||password==''||access_key==''||uuid==''
-      raise CommonErrorView, "不正な値-パラメータが不正です"
-      return false
-    end
-
-    # データを大量に投げつける輩はエラー
-    if passcode.size!=8 || access_key.size>610 || uuid.size>256 || password.size>256
-      raise CommonErrorView, "不正な値-パラメータが不正です"
-      return false
-    end
-      
-    # ハッシュに変換
-    passcode_hash = HashSHA.get512(passcode + uuid + 'XQQ2021');
-
-    # DBにある値との検討
-    sql = 'select passcode_hash, access_key, expire  from kouhou.tmp_users where del_flg=0 and ena_flg=1 and uuid=?;'
-    res = execSql(sql, uuid)
- 
-    # 返ってきたデータの数がおかしくないか
-    if(res==nil||res.size!=1)
-      raise CommonErrorView, 'DBエラー-有効な一時ユーザは存在しません。'
-      return false 
-    end
-
-    # 有効期限確認
-    expire_time = Time.parse(res.first['expire'].to_s)
-    now_time = Time.now
-    if expire_time < now_time 
-      # 期限切れ
-      raise CommonErrorView, '有効期限切れ-指定URLは有効期限が切れています。'
-      return false
-    end
-
-    # アクセスキーの確認
-    access_key_db = res.first['access_key']    
-    if access_key_db != access_key
-      raise CommonErrorView, '指定URLの不正-指定URLのアクセスキーが不正です。'
-      return false
-    end
-
-    # パスコードのチェック
-    hash = res.first['passcode_hash']
-    if(hash!=passcode_hash)
-      raise CommonErrorView, '不正なパスコード-パラメータは不正です。'
-      return false
-    end
-
-    # パスワードの強度の検査
-    pass_len = password.size
-    if(pass_len<8 || pass_len>33)
-      # 8文字以上32文字以内ではない
-      raise CommonErrorView, '不正な値-パスワードは8文字以上<br>32文字以下で入力してください。'
-      return false
-    end
-
-    # Usersテーブルの確認 : 有効なユーザかどうか
-    sql = 'select uuid from kouhou.users where status=2 and del_flg=0 and uuid=?;'
-    res = execSql(sql, uuid)
-    usr_cnt = 0
-    usr_cnt = res.size if res != nil    
-    if usr_cnt!=1
-      raise CommonErrorView, 'DBエラー-有効なユーザは存在しません'
-      return false
-    end
-
-    # ここまできたらOK
-    # パスワードの更新を行う
+    password = generateTmpPasscode()
     password_hash = HashSHA.get512(password + uuid + 'XQQ2021');
-    sql = 'update users set passhash=? where uuid=? and status=2 and del_flg=0;'
-    execSql(sql, password_hash, uuid) # パスワード更新
 
-    redirect to('/user_reset_cmp_msg.html')
+    sql = 'update kouhou.users set passhash=? where uuid=? and email=? and del_flg=0;'
+    execSql(sql, password_hash, uuid, email)
+
+    sendNewPassEmail(email, password)
+
+    redirect to('/user_reset_msg.html')
   end
 end
