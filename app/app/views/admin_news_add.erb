@@ -1,0 +1,88 @@
+<%
+    html = (@is_create) ? '' : '<a href="/admin/news/delete?id=1" class="red">このニュースを削除</a>'
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ニュース編集・追加 | 高専祭管理者ページ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin_news_edit.css">
+    <link rel="stylesheet" href="/css/style.css">    
+    <script src="/js/image_upload.js"></script>    
+</head>
+
+<body>
+    <div class="side-menu">
+        <div class="title"></div>
+        <a href="/kousenadmin/news/dashboard">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        </a>
+    </div>
+    <div class="main-content">
+    <form action="/kousenadmin/news/update/add" method="post" charset="utf-8">
+        <div class="menu">
+            <button type="submit" class="green">サーバにアップロード</button>&nbsp;
+            <%= html %>
+        </div>
+        <div class="main-container">
+            <small>タイトル画像</small>
+            <div>
+                <div style="height:5px; width: 180px; background: #f5c4c4;">
+                    <div style="height: 5px; background: lightgreen;" id="image-prog"></div>
+                </div>
+                <img id="preview-area-image" src="/img/TMCIT_LOGO_REV_M.png" style="height:180px; width: 180px; object-fit: contain;">
+                <input type="file" id="image-picker">
+                <input type="hidden" name="image_path" id="image-pics" value="">
+            </div>            
+            <small>お知らせタイトル(TOPページに表示)</small>
+            <input type="text" name="title" maxlength="30" placeholder="例：ビンゴ大会まもなく開始">
+            <small>お知らせ内容タイトル(詳細画面に表示)</small>
+            <input type="text" name="detail_title" maxlength="30" placeholder="例：ビンゴ大会がまもなく始まります">
+            <small>お知らせサマリ内容(TOPページに表示)</small>
+            <input type="text" name="description" maxlength="40" placeholder="ぜひ参加してください。">
+            <small>お知らせ内容(詳細画面に表示)<small>[Markdown形式]</small></small>
+            <textarea name="detail_desc" id="content">
+例)
+## ビンゴ大会概要
+### 開始日時
+○○時○○分～
+### 参加方法
+下記URLでアカウントを作成し、ビンゴ大会に参加してください  
+[リンク表示名](URL)
+            </textarea>
+            <small>お知らせ日時</small>
+            <input type="datetime-local" name="notify_datetime">
+        </div>      
+        <small>プレビュー</small>
+        <div id="preview-area" class="preview">
+
+        </div>
+    </form>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        window.onload = () => {
+            var m = document.getElementById('content');
+
+            m.addEventListener('keyup', () => {
+                var view = document.getElementById('preview-area');
+                var html = marked(document.getElementById('content').value);
+                view.innerHTML = html;
+            })
+
+            var image_ajax = new ajaxImageController({
+                img_input: "image-picker",
+                view_area: "preview-area-image",
+                prog_area: "image-prog",
+                img_src_input: "image-pics"
+            });    
+        }
+    </script>
+    </body>
+</html>

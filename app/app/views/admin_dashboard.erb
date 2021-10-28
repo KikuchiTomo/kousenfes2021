@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>ダッシュボード | 高専祭管理者ページ</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+        <link rel ="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="/css/dashboard.css">
+    </head>
+    <body class="scroll-bar scroll-bar-width">
+        <div class="side-menu">
+            <div class="title"></div>
+            <a href="/kousenadmin/dashboard">
+                <i class="fas fa-home"></i>
+                <span>DashBoard</span>
+            </a>
+            <a href="/kousenadmin/news/dashboard">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="/kousenadmin/proj/dashboard">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Projects</span>
+            </a>
+            <a href="/kousenadmin/bingo/dashboard">
+                <i class="fas fa-dice"></i>
+                <span>Bingo</span>
+            </a>
+            <a href="/kousenadmin/qr/dashboard">
+                <i class="fas fa-qrcode"></i>
+                <span>QR</span>
+            </a>
+            <a href="/kousenadmin/users/dashboard">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="/kousenadmin/adnmins/dashboard">
+                <i class="fas fa-users-cog"></i>
+                <span>Admins</span>
+            </a>
+            <a href="/kousenadmin/logout">
+                <i class="fas fa-sign-out-alt logout"></i>
+                <span>Logout</span>
+            </a>
+        </div>   
+        <div class="main-content">
+            <h2>ようこそ、<%= @name %>さん</h2>
+            <small>あなたの行える操作は次の通りです。</small>
+            <small>
+                <ul>
+                    <li><i class="<%= (@permit[:news]==1 ) ? "far fa-circle" : "fas fa-times" %>"></i>ニュースの管理</li>
+                    <li><i class="<%= (@permit[:proj]==1 ) ? "far fa-circle" : "fas fa-times" %>"></i>企画の管理</li>
+                    <li><i class="<%= (@permit[:user]==1 ) ? "far fa-circle" : "fas fa-times" %>"></i>ユーザの管理(BAN)</li>
+                    <li><i class="<%= (@permit[:bingo]==1) ? "far fa-circle" : "fas fa-times" %>"></i>ビンゴの企画の管理</li>
+                    <li><i class="<%= (@permit[:qr]==1   ) ? "far fa-circle" : "fas fa-times" %>"></i>QRコード企画の管理</li>
+                    <li><i class="<%= (@permit[:admin]==1) ? "far fa-circle" : "fas fa-times" %>"></i>CMSユーザの管理</li>
+                </ul>
+            </small>
+            
+            <h3>現在の状況</h3>
+            <div class="row">
+            <!-- <div class="thum">
+                <div class="title">
+                    <i class="fas fa-chart-line"></i>
+                    アクセス数
+                </div>        
+                <div class="content">
+                    345,341,234 <small>回</small>
+                </div>
+            </div> -->
+
+            <div class="thum">
+                <div class="title">
+                    <i class="fas fa-users"></i>
+                    アカウント登録者
+                </div>        
+                <div class="content">
+                    <%= @acc_cnt %> <small>人</small>
+                </div>
+            </div>
+
+            <div class="thum">
+                <div class="title">
+                    <i class="fas fa-calendar-check"></i>
+                    開催済みの企画
+                </div>        
+                <div class="content">
+                     47 <small>/ 47</small>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,91 @@
+<%
+html = ''
+@news_list.each{ |news|
+    html += "<tr>"\
+                +"<td>#{news['id']}</td>"\
+                +"<td class=\"center\"><a href=\"/kousenadmin/news/update/edit?id=#{news['id']}\">編集</a></td>"\
+                +"<td class=\"center\"><label for=\"news-id-#{news['id']}\"><input id=\"news-id-#{news['id']}\" name=\"enable[]\" value=\"#{news['id']}\" type=\"checkbox\" #{(news['ena']==1) ? "checked" : ""}></label></td>"\
+                +"<td>#{news['title']}</td>"\
+                +"<td>#{news['dtitle']}</td>"\
+                +"<td><i class=\"#{(news['ddesc']!='') ? "far fa-circle" : "fas fa-times" }\"></i></td>"\
+                +"<td>#{news['date']}</td>"\
+            +"</tr>"\
+}
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ニュース管理 | 高専祭管理者ページ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin_news_list.css">
+</head>
+
+<body>
+    <div class="side-menu">
+        <div class="title"></div>
+        <a href="/kousenadmin/dashboard">
+            <i class="fas fa-home"></i>
+            <span>DashBoard</span>
+        </a>
+        <a href="/kousenadmin/news/dashboard">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        </a>
+        <a href="/kousenadmin/proj/dashboard">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Projects</span>
+        </a>
+        <a href="/kousenadmin/bingo/dashboard">
+            <i class="fas fa-dice"></i>
+            <span>Bingo</span>
+        </a>
+        <a href="/kousenadmin/qr/dashboard">
+            <i class="fas fa-qrcode"></i>
+            <span>QR</span>
+        </a>
+        <a href="/kousenadmin/users/dashboard">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </a>
+        <a href="/kousenadmin/adnmins/dashboard">
+            <i class="fas fa-users-cog"></i>
+            <span>Admins</span>
+        </a>
+        <a href="/kousenadmin/logout">
+            <i class="fas fa-sign-out-alt logout"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <form action="/kousenadmin/news/update/showing_list" method="post" charset="utf-8" style="width: 100%;">
+            <div class="menu">
+                <a href="/kousenadmin/news/update/add" class="green">新規おしらせ</a>&nbsp;
+                <button type="submit" class="green">表示設定を保存・送信</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <tr>
+                    <th>ID</th>
+                    <th class="center">操作</th>
+                    <th class="center">表示</th>
+                    <th>お知らせサマリ(TOP)</th>
+                    <th>お知らせタイトル(詳細)</th>
+                    <th>内容</th>
+                    <th>掲載予定日時</th>
+                    </tr>
+
+                    <%= html %>
+
+                </table>
+            </div>
+        </form>
+    </div>
+   
+</body>
+
+</html>

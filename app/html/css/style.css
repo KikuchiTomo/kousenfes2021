@@ -1,0 +1,156 @@
+/*
+#1B207A
+#3242A3
+#437DBA
+#5CAFC9
+#98D3DB
+#E5E3D5    
+*/
+
+html{
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    scroll-behavior: smooth;
+    overflow: overlay;
+}
+
+body{
+    height: 100vh;
+    margin: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #2e2e2e;    
+    scrollbar-width: thin;    
+    scrollbar-color: rgba(0,0,0,0.2) rgba(10,10,100,0.8); 
+}
+
+h1{
+   font-size: 1.2em;
+   margin: 0;
+}
+
+h2{
+    display: inline;
+    font-size: 1.2em;
+    margin: 11px 0px;    
+}
+
+h3{
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 9px 0px;    
+}
+
+h4{
+    font-weight: 500;
+    font-size: 0.8em;
+    margin: 6px 0px;    
+}
+
+p{
+    font-size: 0.9em;
+    font-weight: 300;
+    margin: 2px 0px;
+}
+
+ul li {
+    padding-left: 0.4em;
+    text-indent: -0.4em;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0.4em;
+    text-indent: -0.4em;    
+}
+
+.white{
+    color: white;
+}
+
+.black{
+    color: #2e2e2e;
+}
+
+.water{
+    color: #0A62A9;    
+}
+
+.back-white{
+    padding: 3px 5px 4px 5px;
+    background: white;
+    border-radius: 3px;
+}
+
+.back-water{
+    padding: 3px 5px 4px 5px;    
+    background: #0A62A9;    
+    border-radius: 3px;    
+}
+
+.loading{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0px;
+    z-index: 1000;
+    background: #0068b8;
+}
+
+.loading img{
+    border-radius: 70px;
+    padding: 10px;
+    border: 1px solid white;
+    margin: auto;
+    width: 100px;
+    height: 100px;
+    animation: load 5s linear infinite;
+}
+
+@keyframes load {
+   100% {
+       transform: rotate(360deg);
+   }
+}
+
+.loaded{
+    transition: 0.5s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.scroll-bar-width::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+}
+ 
+.scroll-bar-height::-webkit-scrollbar{
+    height: 10px;
+    cursor: pointer;
+}
+
+.scroll-bar::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 5px;
+    cursor: pointer;
+}
+ 
+.scroll-bar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+code{
+    padding: 5px 6px;
+    background: lightgray;
+    border-radius: 3px;
+    border: 0.5px solid gray;
+    color: #2e2e2e;
+}
+
+#menu-bak{
+    overflow: hidden;
+}

@@ -1,0 +1,358 @@
+<%
+  news_str = ''
+  @news_ary.each { |news|
+  is_noimg = ''
+  if (news['img']==''||news['img']==nil||news['img']=="NOIMAGE")
+    is_noimg = 'none'
+    news['img'] = '/img/TMCIT_LOGO_REV.png'
+  end 
+  is_show_newmark = ''
+  is_show_newmark = ((Time.now - news['notify_time'])<(15*60)) ? 'new' : '' 
+news_str += "<div class=\"thum-one-container pointer\">"\
+            + "<a href=\"/news/detail?id=#{news['id']}\">"\
+              + "<div class=\"thum-one #{is_show_newmark}\">"\
+                + "<div class=\"thum-one-icon #{is_noimg} pointer\">"\
+                  + "<img src=\"#{news['img']}\" class=\"\">"\
+                + "</div>"\
+                + "<div class=\"thum-one-context\">"\
+                  + "<h4>#{news['title']}</h4>"\
+                  + "<p><small>#{news['date']}</small><br>#{news['summary']}</p>"\
+                + "</div>"\
+              + "</div>"\
+            + "</a>"\
+          +"</div>"
+  }
+
+  proj_str=''
+  @proj_ary.each{ |proj|
+    is_noimg = ''
+    if(proj['img']==''||proj['img']==nil||proj['img']=="NOIMAGE")
+      is_noimg = 'none'
+      proj['img'] = '/img/TMCIT_LOGO_REV.png'
+    end
+    is_show_newmark = ''
+    p proj
+    is_show_newmark = ((Time.now - proj['time'])<(30*60)) ? 'new' : ''
+    proj_str += "<div class=\"thum-one-container\">"\
+          +"<a href=\"/proj/detail?id=#{proj['id']}\">"\
+            +"<div class=\"thum-one #{is_show_newmark}\">"\
+              +"<div class=\"thum-one-icon #{is_noimg}\">"\
+                +"<img src=\"#{proj['img']}\" class=\"\">"\
+              +"</div>"\
+              +"<div class=\"thum-one-context\">"\
+                +"<h4 class=\"white\"><span style=\"color: white; background: #0A62A9; padding: 2px 4px 3px 4px;border-radius: 2px;\">#{proj['cate']}</span>　#{proj['title']}</h4>"\
+                +"<p class=\"white\"><small>#{proj['org']}</small><br>#{proj['desc']}"\
+                +"</p>"\
+              +"</div>"\
+            +"</div>"\
+          +"</a>"\
+        +"</div>"
+
+  }
+%>
+
+<!DOCTYPE html>
+<html lang="ja" id="html-container" class="scroll-bar scroll-bar-width">
+
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="description"
+    content="第五十七回 都立産業技術高専荒川キャンパス高専祭の公式ホームページです．このサイトでは，更新情報や企画検索，その他委員会企画への参加申し込み，学校説明会などの情報を掲載しています">
+  <title>第57回 高専祭 - 産業技術高専</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="/js/scroll_change_color.js"></script>
+  <script>
+    function closeMenu() {
+      let menu_elem = document.getElementById('menu-ham');
+      menu_elem.checked = false;
+    }
+  </script>
+</head>
+
+<body id="body" class="scroll-bar scroll-bar-width">
+  <div class="loading" id="loading">
+    <img src="/img/TMCIT_LOGO_REV_M.png">
+  </div>
+  <section id="top" class="index-top">
+    <div class="top-background-img" id="top-backing">
+      <!-- <img src="" class="top-background-img"> -->
+    </div>
+    <div class="top-background" id="top-bak">
+      <div class="top-content">
+        <div class="top-img-container">
+          <!-- <div class="top-img top01" ></div> -->
+          <!-- <div class="top-img top02" ></div> -->
+          <img class="top-img" src="img/TOP57LEFT_LIGHT.png" alt="技術と技能の調和 高専生による熱血の祭り">
+          <img class="top-img" src="img/TOP_SG11.png" alt="技術と技能の調和 高専生による熱血の祭り">
+        </div>
+      </div>
+    </div>
+
+    <input type="checkbox" id="menu-ham">
+    <label for="menu-ham" class="menu-button">
+      <span id="hams"></span>
+    </label>
+    <nav class="menu-container">
+      <a href="/" onclick="closeMenu()" class="current-page pointer">Top</a>
+      <a href="/search" class="pointer">Search</a>
+      <a href="/news" class="pointer">News</a>
+      <a href="/kousen/mypage" class="pointer">My Page</a>
+    </nav>
+    <div class="menu-background" id="menu-bak">
+      <h1>
+        <div class="header-img"></div>
+      </h1>
+    </div>
+    <!-- BEGIN TOP CONTENT -->
+    <!-- END TOP CONTENT -->
+  </section>
+  <section class="index-news">
+    <div class="news-title">
+      <h2 class="black">NEWS</h2>
+      <p><small>更新情報などのお知らせです</small></p>
+    </div>
+    <div class="news-content">
+      <div class="news-col flex-divs scroll-bar scroll-bar-height">
+      
+        <%= news_str %>
+        <div class="thum-one-container list_link">
+          <a href="/news">
+            もっと見る
+          </a>
+        </div>
+      </div>
+    </div>
+    <a href="news" class="news-link">一覧を表示</a>
+  </section>
+
+  <section class="index-proj" id="proj">
+    <div class="proj-title">
+      <h2 class="white">企画</h2>
+      <p><small class="white">イベントの紹介を行なっています</small></p>
+    </div>
+    <div class="proj-content">
+      <div class="news-col flex-divs scroll-bar scroll-bar-height">
+
+        <!-- Begin news one content -->
+        <%= proj_str %>
+
+        <div class="thum-one-container list_link white">
+          <a href="/search">
+            もっと見る 
+          </a>
+        </div>
+        <!-- End news one content -->
+        
+      </div>
+    </div>
+    <a href="/search" class="proj-link">一覧を表示</a>
+  </section>
+  <section class="index-info">
+    <div class="info-title">
+      <h2 class="white">案内情報</h2>
+      <p><small class="white">各案内情報のリンクです</small></p>
+    </div>
+    <div class="info-content  scroll-bar scroll-bar-height">
+      <div class="info-container">
+
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/annai.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">入場案内</h4>
+              <p>
+                <small class="white">
+                  入場についての案内です
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+         <!-- Begin info one content -->
+        <a href="/publish_kousen/aisatu_koutyousensei.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">校長先生のご挨拶</h4>
+              <p>
+                <small class="white">
+                  本学の校長先生によるご挨拶です。
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/setumeikai.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">学校説明会</h4>
+              <p>
+                <small class="white">
+                  学校説明会についての特設ページです
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/covid19.html">
+          <div class="thum-simple-one">
+            <div class="thum-simple-one-img">
+              <img src="img/005.jpg">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">新型コロナウイルス対策</h4>
+              <p>
+                <small class="white">
+                  高専祭での新型コロナウイルス対策方針を掲載しています
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/time_table.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">企画タイムテーブル</h4>
+              <p>
+                <small class="white">
+                  企画の開催タイムテーブルです
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/site_policy.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">サイトポリシー</h4>
+              <p>
+                <small class="white">
+                  本サイトを利用するに当たっての注意事項です
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/tyuui.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">高専祭委員企画での注意事項</h4>
+              <p>
+                <small class="white">
+                  高専祭実行委員企画を行うに当たっての注意事項です
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+        <!-- Begin info one content -->
+        <a href="/publish_kousen/miraikoubou.html">
+          <div class="thum-simple-one none">
+            <div class="thum-simple-one-img">
+            </div>
+            <div class="thum-sinple-one-content">
+              <h4 class="white">未来工房</h4>
+              <p>
+                <small class="white">
+                  未来工房での成果発表を掲載しています
+                </small>
+              </p>
+            </div>
+          </div>
+        </a>
+        <!-- End info one content -->
+      </div>
+    </div>
+  </section>
+  <footer>
+    <p class="copyright"><small>&copy; 2021 Kousen Festival Committee (TMCIT-ACP). All Rights Reserved<small></p>
+  </footer>
+</body>
+<script>
+  // setting (change color)
+  window.onload = function () {
+    const spinner = document.getElementById('loading');
+    spinner.classList.add('loaded');
+
+    var userAgent = window.navigator.userAgent.toLowerCase();
+    var ani = document.getElementById("top-backing")
+
+    if (userAgent.indexOf('msie') != -1 ||
+      userAgent.indexOf('trident') != -1) {
+      isWebKits =
+        ani.classList.add("can-animation")
+    } else if (userAgent.indexOf('edge') != -1) {
+      observe_target = document.body;
+      ani.classList.add("can-animation")
+    } else if (userAgent.indexOf('chrome') != -1) {
+      observe_target = document.body;
+      ani.classList.add("can-animation")
+    } else if (userAgent.indexOf('safari') != -1) {
+      observe_target = document.body;
+      ani.classList.add("can-animation")
+    } else if (userAgent.indexOf('firefox') != -1) {
+      alert("Google Chrome推奨です。デザインが崩れる可能性があります。"); 
+      observe_target = document.documentElement;
+      ani.classList.add("can-animation")
+    } else if (userAgent.indexOf('opera') != -1) {
+      observe_target = document.documentElement;
+      ani.classList.add("can-animation")
+    } else {
+    }
+
+    var isWebKits = false;
+
+    if (navigator.userAgent.toLowerCase().match(/webkit|msie 5/)) {
+      isWebKits = false;
+    } else {
+      isWebKits = true;
+    }
+
+    var cc = new scrollChangeClass({
+      is_webkits_client: isWebKits,
+      observe_target_elem: observe_target,
+      color_target_ids: ['hams', 'menu-bak'],
+      trigger_target_id: 'top',
+      class_name: 'scroll-changed'
+    });
+
+    cc.proc(); // リロード時用
+
+    window.onscroll = scroll = () => {
+      cc.proc()
+    }
+  }
+</script>
+
+</html>

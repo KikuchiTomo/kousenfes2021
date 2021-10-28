@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja" id="html">
+<head>
+  <!--　覗いた人への言い訳: 結合テストも単体テストしてないので，バックエンド側にバグあるかもしれないけど，一応セキュリティの対策はしてます -->
+  <meta charset="UTF-8">
+  <title>Reset Confirm - 第57回 高専祭</title>
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/user.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  var ua = navigator.userAgent.toLowerCase();
+  var isiOS = (ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1);
+  if(isiOS) {
+    var viewport = document.querySelector('meta[name="viewport"]');
+    if(viewport) {
+      var viewportContent = viewport.getAttribute('content');
+      viewport.setAttribute('content', viewportContent + ', user-scalable=no');
+    }
+  }
+  </script>
+  <script src="/js/scroll_change_color.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js">
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+  <script>
+    function closeMenu() {
+      let menu_elem = document.getElementById('menu-ham');
+      menu_elem.checked = false;
+    }
+  </script>
+</head>
+
+<body id="body" class="scroll-bar scroll-bar-width">
+  <div class="loading" id="loading">
+    <img src="/img/TMCIT_LOGO_REV_M.png">
+  </div>
+
+  <section id="top" class="user-top">
+    <div class="top-background-img" id="top-backing">
+    </div>
+    <div class="top-background" id="top-bak">
+      <div class="top-content">
+        <div>
+        </div>
+      </div>
+
+      <input type="checkbox" id="menu-ham">
+      <label for="menu-ham" class="menu-button">
+        <span id="hams" class="scroll-changed"></span>
+      </label>
+      <nav class="menu-container">
+        <br>
+        <a href="/">Top</a>
+        <a href="/search" onclick="closeMenu()">Search</a>
+        <a href="/news">News</a>
+        <a href="/kousen/mypage" class="current-page">My Page</a>
+      </nav>
+      <div class="menu-background scroll-changed" id="menu-bak">
+        <h1>
+          <div class="header-img"></div>
+        </h1>
+      </div>
+  </section>
+
+  <section class="index-info">
+    <div id="user-container" class="user">
+      <h1>パスワードリセット</h1>
+      <form method="post" accept-charset="UTF-8" action="/kousenuser/reset/entry">  
+        <p class="form-required">パスワード</p>
+        <input type="password" class="form input" name="password" id="pass0" required>
+        <p class="form-required">パスワード(確認)</p>
+        <input type="password" class="form input" id="pass1" required>
+        <p class="form-required">メール添付再発行用パスコード</p>
+        <input type="passcode" class="form input" id="passcode" name="passcode" required>          
+        <input type="hidden" name="access_key" value="<%= @access_key %>">      
+        <input type="hidden" name="uuid" value="<%= @uuid %>">      
+        <button type="submit" class="login" id="submit0">認証へ進む ＞</button>
+      </form>
+    </div>
+
+    <div class="error-show" id="error0">
+    </div>
+  </section>
+  <footer>
+    <p class="copyright"><small>&copy; 2021 Kousen Festival Committee (TMCIT-ACP). All Rights Reserved</small></p>
+  </footer>
+</body>
+<script src="/js/password_check.js"></script>
+<script src="/js/sinup_select_check.js"></script>
+<script>
+  // setting (change color)
+  window.onload = function () {
+    const spinner = document.getElementById('loading');
+    spinner.classList.add('loaded');
+
+    addEventCheckPassDiff();
+  }
+
+</script>
+
+</html>

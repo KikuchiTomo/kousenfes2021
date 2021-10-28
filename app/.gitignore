@@ -1,0 +1,10 @@
+/key_ssl/
+/key_nopass/
+/log/
+\#*#
+/.bundle/
+/pids/
+/.DS_Store
+/app/.bundle/
+/html/kouhou_images/
+/app/backup/

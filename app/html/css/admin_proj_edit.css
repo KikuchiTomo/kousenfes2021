@@ -1,0 +1,172 @@
+html,body{
+    display: block;
+    margin: 0;
+    height: 100% !important;
+    overflow: visible !important;
+}
+
+body{
+    display: block;    
+}
+
+.side-menu a{
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;    
+}
+
+.side-menu a:hover{
+    transition: 0.4s;
+    transform: translateX(4px);
+}
+
+.side-menu{
+    position: fixed;
+    padding: 10px;
+    height: 100vh;
+    width: 200px;
+    background: #1d1c1c;
+}
+
+.title{
+    height: 50px;
+    width: 80px;
+    /* object-fit: contain; */
+    background-image: url("../img/Nav_web_top_logo_white.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+a .fas{
+    color: rgb(228, 228, 228);
+}
+
+a .fas + span{
+    color: rgb(228, 228, 228);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: lighter;
+}
+
+a .fas.logout, a .fas.logout + span{
+    color: rgb(233, 131, 131);
+}
+
+.main-content{
+    font-family: 'Noto Sans JP', sans-serif;
+    height: 100vh;
+    width: 100%;
+    padding: 20px 20px 0 20px;
+}
+
+.main-content h2{
+    margin: 0;
+}
+
+.main-content h3{
+    margin: 10px 0;
+}
+
+.main-content small ul{
+    margin-bottom: 0;
+}
+.main-content .row{
+    display: flex;
+    align-items: flex-start;
+}
+
+
+
+.thum .title{
+    height: 30px;
+    width: auto;
+    font-weight: normal;
+}
+
+.thum .content{
+    font-weight: 500 !important;
+    font-size: 24px;
+}
+
+.thum{
+    margin: 12px;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 1.5px 1.5px 3px 2px rgba(0, 0, 0, 0.5);
+}
+
+ul{
+    list-style: none;
+    padding-left: 10px;
+}
+.fa-circle{
+    color: rgb(112, 202, 112);
+    margin-right: 5px;
+}
+
+.fa-times{
+    color:rgb(233, 131, 131);
+    margin-right: 8px;    
+}
+
+.menu{
+    display: flex;
+    margin-bottom: 17px;
+    padding-left: 220px;
+}
+
+.menu a{
+    display: block;
+    border-radius: 3px;
+    text-decoration: none;
+    padding: 8px;
+    box-shadow: 1.5px 1.5px 3px 2px rgba(0, 0, 0, 0);
+}
+
+a.red{
+    background:rgb(233, 131, 131);
+    color: white;
+}
+
+a.green{
+    background:rgb(112, 202, 112);
+    color: white;
+}
+.menu a:hover{
+    transition: 0.3s;
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.7);
+}
+
+.main-container{
+    padding-left: 220px;
+    padding-bottom: 30px;
+    width: 80%;
+}
+.main-container small, .main-container div, .main-container div input, .main-container input, .main-container select{
+    display: block;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.main-container textarea{
+    resize: none;
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    min-height: 100px;
+}
+
+input[type="text"],textarea,select{
+    padding: 5px 12px 6px 12px;
+    font-size: 15px;
+    text-align: left;
+}
+
+.preview{
+    height: 150px;
+    overflow-y: scroll;
+}
+
+.body{
+    display: flex;
+}
