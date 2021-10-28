@@ -457,3 +457,14 @@ div.news-con span.news-text{
 h3{
     margin: 0px 20px;
 }
+
+strong{
+    font-weight: normal;
+    font-size: 13px;
+}
+
+h3.st{
+    font-size: 15px;
+    border-bottom: 0.5px solid #2e2e2e;
+    padding-bottom: 3px;
+}

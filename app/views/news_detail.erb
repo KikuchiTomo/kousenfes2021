@@ -53,7 +53,7 @@
     
     <section class="index-info">
       <div clas="top-header-image">
-        <img src="<%= (@news['path']=="NOIMAGE") ? "/img/TMCIT_LOGO_REV_M_HEADER.png" : @news['path'] %>" id="header">        
+        <img src="<%= (@news['path']=="") ? "/img/TMCIT_LOGO_REV_M_HEADER.png" : @news['path'] %>" id="header">        
       </div>
       <div id="user-container" class="user">
         <h1 class="title"><%= @news['title'] %></h1>
