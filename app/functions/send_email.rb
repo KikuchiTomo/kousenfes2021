@@ -49,6 +49,8 @@ def sendAuthEmail(email, username, passcode, access_key, uuid)
 
 URL : https://www.kousensai.jp/kousenuser/sinup/entry?accesskey=#{access_key}&uuid=#{uuid}
 
+(※このメール内容は共有しないでください)
+
 なお、パスコードが期限切れとなった場合には、以下のURLにアクセスしていただき再度手続きを行なって下さい
 
 認証用パスコード再発行 : https://www.kousensai.jp/kousenuser/tmp/reset
@@ -84,6 +86,7 @@ def sendAuthAdminEmail(email, username, passcode, access_key, uuid)
 有効期間は30分です。
 
 パスコード : #{passcode}
+(※このメール内容は共有しないでください)
 
 URL : https://www.kousensai.jp/kousenadmin/sinup/entry?accesskey=#{access_key}&uuid=#{uuid}
 
@@ -108,9 +111,46 @@ def sendNewPassEmail(email, passcode)
 有効期間は無期限です。
 
 仮パスワード : #{passcode}
+(※このメール内容は共有しないでください)
 
 URL : https://www.kousensai.jp/kousenuser/login
 
+
+============================
+都立産業技術高専 高専祭実行委員会 広報部署
+
+* このメールは自動返信です。お問い合わせには一切対応できません。
+* お問い合わせには以下のメールアドレス、または、以下のフォームよりご連絡ください。
+
+Email : kousensai.r3@gmail.com
+フォーム : https://docs.google.com/forms/d/e/1FAIpQLScUdvHRpl3yCUlBOkbA3yVFoS79nrCiL0_owiUpbx4-87g5jw/viewform
+
+* 上記のメールアドレスは、実行委員会全体のメールアドレスです。広報部署専用ではありませんので、Webシステム上の不具合については、なるべくGoogleフォームにご連絡ください。
+EOS
+    sendEmail(email, subject, body)
+end
+
+# 認証用メールを送信する
+# @param email
+# @param username 
+# @param passcode
+# @param access_key
+# @param uuid
+# @param expire
+def sendResetURLEmail(email, passcode, access_key, uuid)
+    subject = "パスワード再設定用URL発行のお知らせ【産技高専祭】"
+    body = <<EOS
+
+パスワード再設定用ののURLが発行されました。以下のリンクを開いて、新規パスワードを設定してください。
+有効期間は30分です。
+
+URL : https://www.kousensai.jp/kousenuser/reset/entry?accesskey=#{access_key}&uuid=#{uuid}
+再設定許可用パスコード : #{passcode}
+(※このメール内容は共有しないでください)
+
+なお、URLが期限切れとなった場合には、以下のURLにアクセスしていただき再度手続きを行なって下さい
+
+パスワード再発行 : https://www.kousensai.jp/kousenuser/reset
 
 ============================
 都立産業技術高専 高専祭実行委員会 広報部署
