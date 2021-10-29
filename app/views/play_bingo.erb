@@ -52,35 +52,26 @@
     <section class="index-info">
       <div class="space"></div>
       <div class="video">
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> a37f8751f8e80894c2556fdcb9a80b1a4e7573e4
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/X7SymNgbx2A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        <details style="width: 80vw; margin: auto; cursur: pointer;">
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/ppul-rpY7rU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        <details style="width: 80vw; margin: auto; cursor: pointer;">
         <summary style="padding: 5px 7px 6px 7px; font-size: 14px; display: inline-block; margin: 5px 0; border-radius: 3px; background: #2e2e2e; color: white;" >チャット欄</summary>
         <div class="video_comment" >
-          <iframe frameborder="0" style="min-height: 360px;" height="360" src="https://www.youtube.com/live_chat?v=X7SymNgbx2A&embed_domain=www.kousensai.jp"></iframe>
+          <iframe frameborder="0" style="min-height: 360px;" height="360" src="https://www.youtube.com/live_chat?v=ppul-rpY7rU&embed_domain=www.kousensai.jp"></iframe>
         </div>
         </details>
       </div>
-      <div class="bingo_sheet">
+ <!--     <div class="bingo_sheet">
       
-<<<<<<< HEAD
-=======
-=======
+
       <iframe width="560" height="315" src="https://www.youtube.com/embed/X7SymNgbx2A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="bingo_sheet">
       <div class="video_comment">
       <iframe width="350" height="270" frameborder="0" src="https://www.youtube.com/live_chat?v=X7SymNgbx2A&embed_domain=https://kousensai.jp/" allowfullscreen></iframe>
       </div>
-<<<<<<< HEAD
+-->
       <div class="bingo_sheet">
->>>>>>> 4390dc716421eedf6d3673ac424a8a72c3d871ef
->>>>>>> a37f8751f8e80894c2556fdcb9a80b1a4e7573e4
-=======
->>>>>>> parent of 3e7c486... bingo_cssの調整
         <img src="/img/bingo_title.png" alt="bingo_title">
       </div>
       <div id="bingo-container" class="bingo">
@@ -111,11 +102,11 @@
         }
 
         // ロード時に実行
-        drawBingoFromServer({id: "bingo-container"});
+        drawBingoFromServer({id: "bingo-container", uuid: "1c7b5ffb-fd2f-4d4b-92e8-3b874694444f"});
 
         let bingo_area = document.getElementById('bingo-container'); // ビンゴView取得
         bingo_area.addEventListener('click', () => {          
-          drawBingoFromServer({id: "bingo-container"}); // 再描画
+          drawBingoFromServer({id: "bingo-container", uuid: "1c7b5ffb-fd2f-4d4b-92e8-3b874694444f"}); // 再描画
         })
     }
   </script>
