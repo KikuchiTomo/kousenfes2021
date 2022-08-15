@@ -66,7 +66,7 @@ class BingoControllClass < NewsControllClass
         if num.count(data['num'][tr][td]) >= 1
           op << 1
         else
-          op <<0
+          op << 0
         end
       end
       is_open << op
