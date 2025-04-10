@@ -2,10 +2,8 @@ require 'yaml'
 require 'mail'
 
 def sendEmail(destnationAddress, subject, body)
-    # dfEbrnY26uMS
-    # xapmufikwvztrxaf
-    server_str = 'smtp.gmail.com'
-    password_str = 'xapmufikwvztrxaf'
+    server_str = ''
+    password_str = ''
     port = 587
     address_str = 'kousen.fes.auto.mailer.noreply@gmail.com'
 
